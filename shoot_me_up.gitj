@@ -1,0 +1,111 @@
+{
+  "projectName": "Shoot_me_up",
+  "me": "esteban-escher",
+  "journalStartDate": "2026-08-27T11:10:00.000Z",
+  "columns": [
+    {
+      "label": "Date",
+      "source": "date",
+      "format": "date",
+      "field": "date"
+    },
+    {
+      "label": "Tâche",
+      "source": "name",
+      "field": "name"
+    },
+    {
+      "label": "Description",
+      "source": "description",
+      "field": "description"
+    },
+    {
+      "label": "Durée",
+      "source": "duration",
+      "format": "duration",
+      "field": "duration"
+    },
+    {
+      "label": "Statut",
+      "source": "status",
+      "format": "badge",
+      "field": "status"
+    },
+    {
+      "label": "Auteur",
+      "source": "author"
+    }
+  ],
+  "exceptions": [
+    {
+      "id": "4daf6035-0d92-4274-b854-8d00198ca6aa",
+      "type": "commitless",
+      "author": "esteban-escher",
+      "date": "2026-08-28T12:14:00.000Z",
+      "name": "meet(projet) Ecouter les instructions du projet",
+      "description": "-Cahier des charges\r\n-Projet handbook\r\n-Convention Technique\r\n-Outils",
+      "duration": 90,
+      "status": "Done"
+    },
+    {
+      "id": "bff7ff36-89ca-47e5-a780-8e41ee9edce5",
+      "type": "commitless",
+      "author": "esteban-escher",
+      "date": "2026-08-28T12:30:00.000Z",
+      "name": "Chore(assets) Création des assets et reflexion",
+      "description": "-Choix du thème\r\n-Création des assets\r\n-Choix des mécaniques de jeux",
+      "duration": 90,
+      "status": "DONE"
+    },
+    {
+      "id": "eee24716-4a1e-414b-9261-b347aab93b01",
+      "type": "commitless",
+      "author": "esteban-escher",
+      "date": "2026-09-04T12:00:00.000Z",
+      "name": "Chore(JDC) Création du JDC",
+      "description": "-Réglage des problèmes avec le JDC\r\n-Création du journal",
+      "duration": 30,
+      "status": "DONE"
+    },
+    {
+      "id": "836eb5ee-3e23-43df-bc58-c22d8c98a188",
+      "type": "commitless",
+      "author": "esteban-escher",
+      "date": "2026-09-04T11:10:00.000Z",
+      "name": "meet(Rapport) Disscussion sur les attentes sur le contenu du rapport",
+      "description": "-Contenu\r\n-Règle",
+      "duration": 30,
+      "status": "DONE"
+    },
+    {
+      "id": "22f1a65f-892c-467c-9c91-05d74b271b95",
+      "type": "commitless",
+      "author": "esteban-escher",
+      "date": "2026-09-04T12:21:00.000Z",
+      "name": "chore(US) création des premières User story",
+      "description": "",
+      "duration": 0,
+      "status": ""
+    },
+    {
+      "id": "6c6605b6-9ccf-4a30-a8a0-596319054b89",
+      "type": "commitless",
+      "author": "esteban-escher",
+      "date": "2026-09-04T12:30:00.000Z",
+      "name": "Chore(US) Création de Us et de la maquette de base",
+      "description": "-Us 1 créée\r\n-Maquette Universelle créée",
+      "duration": 30,
+      "status": "DONE"
+    },
+    {
+      "id": "cbd72f9b-bba4-490e-a9db-ea5070795533",
+      "type": "commitless",
+      "author": "esteban-escher",
+      "date": "2026-09-04T13:00:00.000Z",
+      "name": "Chore(US) travail sur les US",
+      "description": "-Création des US 2-3-4-5-6",
+      "duration": 60,
+      "status": "DONE"
+    }
+  ]
+}
