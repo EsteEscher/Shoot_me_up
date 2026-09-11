@@ -106,6 +106,26 @@
       "description": "-Création des US 2-3-4-5-6",
       "duration": 60,
       "status": "DONE"
+    },
+    {
+      "id": "841443e7-8ba7-408d-8b23-0fb7a4c9c188",
+      "type": "commitless",
+      "author": "esteban-escher",
+      "date": "2026-09-11T11:25:00.000Z",
+      "name": "chore(US): UserStory retravaillée",
+      "description": "",
+      "duration": 60,
+      "status": "Done"
+    },
+    {
+      "id": "e2557194-2384-4ee5-a808-9370b364875d",
+      "type": "commitless",
+      "author": "esteban-escher",
+      "date": "2026-09-11T12:30:00.000Z",
+      "name": "Meet(disc) discussion avec le prof",
+      "description": "",
+      "duration": 15,
+      "status": "Done"
     }
   ]
 }
