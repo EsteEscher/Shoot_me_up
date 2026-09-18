@@ -1,7 +1,7 @@
-﻿using Drones.Helpers;
-using Drones.Properties;
+﻿using Player.Helpers;
+using Game.Properties;
 
-namespace Drones
+namespace Player
 {
     // Cette partie de la classe Drone définit ce qu'est un drone par un modèle numérique
     public class Drone
