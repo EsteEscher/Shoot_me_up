@@ -61,19 +61,23 @@ namespace Player
                     _player.ChangeDirection(1);
                     break;
 
-                case Keys.Left:
-                case Keys.A:
-                    _player.ChangeDirection(3);
-                    break;
-
                 case Keys.Up:
                 case Keys.W:
                     _player.ChangeDirection(2);
                     break;
 
+                case Keys.Left:
+                case Keys.A:
+                    _player.ChangeDirection(3);
+                    break;
+
                 case Keys.Down:
                 case Keys.S:
                     _player.ChangeDirection(4);
+                    break;
+
+                case Keys.RButton:
+                case Keys.Space:
                     break;
             }
         }

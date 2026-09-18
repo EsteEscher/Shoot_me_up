@@ -11,7 +11,6 @@ namespace Player
         public int x;                                 // Position en X depuis la gauche de l'espace aérien
         public int y;                                 // Position en Y depuis le haut de l'espace aérien
         public int speed_x;                           // Déplacement horizontal
-        public int speed_y;
         // Déplacement vertical
         private Random _alea = new Random();
 
@@ -36,13 +35,23 @@ namespace Player
         public void ChangeDirection(int side)
         {
             if (side == 1)
-                x++;
+                x += 3;
             if (side == 2)
-                y--;
+                y -= 3;
             if (side == 3)
-                x--;
+                x -= 3;
             if (side == 4)
-                y++;
+                y += 3;
+
+            //Barriere invisible
+            if (x <= 0)
+                x = 0;
+            if (x >= AirSpace.WIDTH - 100)
+                x = AirSpace.WIDTH - 100;
+            if (y <= 0)
+                y = 0;
+            if (y >= AirSpace.HEIGHT - 100)
+                y = AirSpace.HEIGHT - 100;
         }
 
         /// //////////////////////////////////////////////////////////////////////////////
