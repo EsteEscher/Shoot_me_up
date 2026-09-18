@@ -10,13 +10,13 @@ namespace Player
         public static readonly int HEIGHT = 600;
 
         // La flotte est l'ensemble des drones qui évoluent dans notre espace aérien
-        private Drone _player;
+        private Player _player;
 
         BufferedGraphicsContext currentContext;
         BufferedGraphics airspace;
 
         // Initialisation de l'espace aérien avec un certain nombre de drones
-        public AirSpace(Drone player)
+        public AirSpace(Player player)
         {
             InitializeComponent();
             ClientSize = new Size(WIDTH, HEIGHT);
@@ -56,8 +56,24 @@ namespace Player
         {
             switch (e.KeyCode)
             {
-                case Keys.Space:
-                    _player.ChangeDirection();
+                case Keys.Right:
+                case Keys.D:
+                    _player.ChangeDirection(1);
+                    break;
+
+                case Keys.Left:
+                case Keys.A:
+                    _player.ChangeDirection(3);
+                    break;
+
+                case Keys.Up:
+                case Keys.W:
+                    _player.ChangeDirection(2);
+                    break;
+
+                case Keys.Down:
+                case Keys.S:
+                    _player.ChangeDirection(4);
                     break;
             }
         }
