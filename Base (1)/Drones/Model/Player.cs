@@ -6,12 +6,9 @@ namespace Player
     // Cette partie de la classe Drone définit ce qu'est un drone par un modèle numérique
     public class Player
     {
-        public int hp;                            // La charge actuelle de la batterie
-        public string name;                           // Un nom
+        public int hp;                                // Ces Pv                      
         public int x;                                 // Position en X depuis la gauche de l'espace aérien
         public int y;                                 // Position en Y depuis le haut de l'espace aérien
-        public int speed_x;                           // Déplacement horizontal
-        // Déplacement vertical
         private Random _alea = new Random();
 
         // Constructeur
@@ -20,15 +17,13 @@ namespace Player
             Random alea = new Random();
             this.x = x;
             this.y = y;
-            this.name = name;
-            hp = alea.Next(1000); // La charge initiale de la batterie est choisie aléatoirement
+            hp = 3; // La charge initiale de la batterie est choisie aléatoirement
         }
 
         // Cette méthode calcule le nouvel état dans lequel le drone se trouve après
         // que 'interval' millisecondes se sont écoulées
         public void Update(int interval)
         {
-            hp--;
         }
 
         // Choisit une nouvelle vitesse aléatoirement
@@ -46,12 +41,12 @@ namespace Player
             //Barriere invisible
             if (x <= 0)
                 x = 0;
-            if (x >= AirSpace.WIDTH - 100)
-                x = AirSpace.WIDTH - 100;
+            if (x >= GameSpace.WIDTH - 100)
+                x = GameSpace.WIDTH - 100;
             if (y <= 0)
                 y = 0;
-            if (y >= AirSpace.HEIGHT - 100)
-                y = AirSpace.HEIGHT - 100;
+            if (y >= GameSpace.HEIGHT - 100)
+                y = GameSpace.HEIGHT - 100;
         }
 
         /// //////////////////////////////////////////////////////////////////////////////
@@ -74,7 +69,7 @@ namespace Player
         // De manière textuelle
         public override string ToString()
         {
-            return $"{name} ({((int)((double)hp / 1000 * 100)).ToString()}%)";
+            return $"Goku ({((int)((double)hp / 1000 * 100)).ToString()}%)";
         }
 
 

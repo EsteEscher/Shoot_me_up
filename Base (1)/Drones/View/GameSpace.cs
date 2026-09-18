@@ -4,19 +4,20 @@ namespace Player
     // Il s'agit d'un formulaire (une fenêtre) qui montre une vue 2D depuis en dessus
     // Il n'y a donc pas de notion d'altitude qui intervient
 
-    public partial class AirSpace : Form
+    public partial class GameSpace : Form
     {
         public static readonly int WIDTH = 1200;        // Dimensions of the airspace
         public static readonly int HEIGHT = 600;
 
         // La flotte est l'ensemble des drones qui évoluent dans notre espace aérien
         private Player _player;
+        private Ennemis _ennemis;
 
         BufferedGraphicsContext currentContext;
-        BufferedGraphics airspace;
+        BufferedGraphics gamespace;
 
         // Initialisation de l'espace aérien avec un certain nombre de drones
-        public AirSpace(Player player)
+        public GameSpace(Player player)
         {
             InitializeComponent();
             ClientSize = new Size(WIDTH, HEIGHT);
@@ -25,18 +26,18 @@ namespace Player
             currentContext = BufferedGraphicsManager.Current;
             // Creates a BufferedGraphics instance associated with this form, and with
             // dimensions the same size as the drawing surface of the form.
-            airspace = currentContext.Allocate(this.CreateGraphics(), this.DisplayRectangle);
+            gamespace = currentContext.Allocate(this.CreateGraphics(), this.DisplayRectangle);
             this._player = player;
         }
 
         // Affichage de la situation actuelle
         private void Render()
         {
-            airspace.Graphics.Clear(Color.AliceBlue);
+            gamespace.Graphics.Clear(Color.AliceBlue);
 
-            _player.Render(airspace);
+            _player.Render(gamespace);
 
-            airspace.Render();
+            gamespace.Render();
         }
 
         // Calcul du nouvel état après que 'interval' millisecondes se sont écoulées

@@ -13,7 +13,9 @@ namespace Player
             ApplicationConfiguration.Initialize();
 
             // Démarrage
-            Application.Run(new AirSpace(new Player(AirSpace.WIDTH / 2, AirSpace.HEIGHT / 2, "Joe")));
+            Application.Run(new GameSpace(new Player(GameSpace.WIDTH / 2, GameSpace.HEIGHT / 2, "Goku")));
+
+
         }
     }
 }

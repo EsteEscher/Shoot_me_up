@@ -1,6 +1,9 @@
 {
   "projectName": "Shoot_me_up",
-  "me": ["esteban-escher","EsteEscher"],
+  "me": [
+    "esteban-escher",
+    "EsteEscher"
+  ],
   "journalStartDate": "2026-08-27T11:10:00.000Z",
   "columns": [
     {
@@ -135,6 +138,110 @@
       "name": "Chore(RDP) Remise de prix",
       "description": "",
       "duration": 95,
+      "status": "Done"
+    },
+    {
+      "id": "7c934be5-cc3b-4ac2-b0c1-64f362188e9c",
+      "type": "commitpatch",
+      "sha": "de4572ef27b4ab04df5e42fd9c381de781f83bc3",
+      "url": "https://github.com/EsteEscher/Shoot_me_up/commit/de4572ef27b4ab04df5e42fd9c381de781f83bc3",
+      "author": "EsteEscher",
+      "patch": true,
+      "date": "2026-09-18T13:25:00.000Z",
+      "name": "feat(code) Ajout du model plus son alias pour l'adversaire",
+      "description": "",
+      "duration": 15,
+      "status": "Done"
+    },
+    {
+      "id": "09f40eea-bbec-4b20-bde4-c95879931406",
+      "type": "commitpatch",
+      "sha": "7bc62fb309c61f20b8f180daf33423f27fb6cadb",
+      "url": "https://github.com/EsteEscher/Shoot_me_up/commit/7bc62fb309c61f20b8f180daf33423f27fb6cadb",
+      "author": "EsteEscher",
+      "patch": true,
+      "date": "2026-09-18T12:14:00.000Z",
+      "name": "feat(code) Création des mouvements de base pour Goku",
+      "description": "",
+      "duration": 45,
+      "status": "Done"
+    },
+    {
+      "id": "e4426f02-6708-4a8c-b8f6-68b9644f73fa",
+      "type": "commitpatch",
+      "sha": "69452c5dd4b18414964e879a3f23bc8487327676",
+      "url": "https://github.com/EsteEscher/Shoot_me_up/commit/69452c5dd4b18414964e879a3f23bc8487327676",
+      "author": "esteban-escher",
+      "patch": true,
+      "date": "2026-09-04T14:28:00.000Z",
+      "name": "Chore(US + rapport) finition des Us et rapport compléter plus les médias des maquettes utilisé pour les Us",
+      "description": "",
+      "duration": 35,
+      "status": "Done"
+    },
+    {
+      "id": "1a3d239f-c900-4f33-bc3d-bf0d0db659fa",
+      "type": "commitpatch",
+      "sha": "af7275ec6df24c603d61d0d9f160e995f3d60d70",
+      "url": "https://github.com/EsteEscher/Shoot_me_up/commit/af7275ec6df24c603d61d0d9f160e995f3d60d70",
+      "author": "EsteEscher",
+      "patch": true,
+      "date": "2026-09-18T12:42:00.000Z",
+      "name": "feat(code) Us1 terminée le jeux  présente maintenant des barrières invisible",
+      "description": "",
+      "duration": 10,
+      "status": "Done"
+    },
+    {
+      "id": "9aa1e348-ce2b-4f1e-aeaa-a627344a6ba7",
+      "type": "commitpatch",
+      "sha": "345ec4fe3cfd731d8aa07083743b6636a8f37e6d",
+      "url": "https://github.com/EsteEscher/Shoot_me_up/commit/345ec4fe3cfd731d8aa07083743b6636a8f37e6d",
+      "author": "EsteEscher",
+      "patch": true,
+      "date": "2026-09-18T11:41:00.000Z",
+      "name": "Chore(rename) renommer un maximum des liens avec drones avec des éléments de jeux",
+      "description": "",
+      "duration": 5,
+      "status": "Done"
+    },
+    {
+      "id": "ac6d525a-4750-480e-a638-3ade1ad196a5",
+      "type": "commitpatch",
+      "sha": "6f214db58252248c63b1327b01a33bdcc64d8523",
+      "url": "https://github.com/EsteEscher/Shoot_me_up/commit/6f214db58252248c63b1327b01a33bdcc64d8523",
+      "author": "EsteEscher",
+      "patch": true,
+      "date": "2026-09-18T11:37:00.000Z",
+      "name": "feat(Code) ajout du personnage dans le code",
+      "description": ";",
+      "duration": 10,
+      "status": "Done"
+    },
+    {
+      "id": "97654c4d-ccd4-4aee-a098-2287f2709645",
+      "type": "commitless",
+      "author": [
+        "esteban-escher",
+        "EsteEscher"
+      ],
+      "date": "2026-09-18T14:09:00.000Z",
+      "name": "Chore(Renseignement) Se renseigner sur comment faire les adversaires",
+      "description": "",
+      "duration": 30,
+      "status": "Done"
+    },
+    {
+      "id": "a12c9526-0013-429b-8e7a-e780d44aa467",
+      "type": "commitless",
+      "author": [
+        "esteban-escher",
+        "EsteEscher"
+      ],
+      "date": "2026-09-18T14:30:00.000Z",
+      "name": "Meet(discussion) réglage de problème git journal et écoute théorie tir",
+      "description": "",
+      "duration": 30,
       "status": "Done"
     }
   ]
