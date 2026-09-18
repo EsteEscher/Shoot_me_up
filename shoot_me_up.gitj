@@ -126,6 +126,16 @@
       "description": "",
       "duration": 15,
       "status": "Done"
+    },
+    {
+      "id": "e296b0ed-e4dc-4dd0-a006-b321b67021dd",
+      "type": "commitless",
+      "author": "esteban-escher",
+      "date": "2026-09-11T13:00:00.000Z",
+      "name": "Chore(RDP) Remise de prix",
+      "description": "",
+      "duration": 95,
+      "status": "Done"
     }
   ]
 }
