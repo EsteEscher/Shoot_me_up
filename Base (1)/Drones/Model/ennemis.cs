@@ -50,6 +50,7 @@ namespace Player
             }
             if (_y >= GameSpace.HEIGHT - 200)
             {
+                state = State.SEEKING;
                 if (_player.x < _x)
                 {
                     _x--;
@@ -66,6 +67,13 @@ namespace Player
                 {
                     _y++;
                 }
+            }
+            if (_x == _player.x && _y == _player.y)
+            {
+                state = State.STOPPING;
+                Thread.Sleep(interval*5);
+                state = State.EXPLOSING;
+                return;
             }
         }
 
