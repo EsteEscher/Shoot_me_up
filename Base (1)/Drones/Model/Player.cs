@@ -30,13 +30,13 @@ namespace Player
         public void ChangeDirection(int side)
         {
             if (side == 1)
-                x += 5;
+                x += 10;
             if (side == 2)
-                y -= 5;
+                y -= 10;
             if (side == 3)
-                x -= 5;
+                x -= 10;
             if (side == 4)
-                y += 5;
+                y += 10;
 
             //Barriere invisible
             if (x <= 0)

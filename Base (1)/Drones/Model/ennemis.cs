@@ -15,6 +15,8 @@ namespace Player
         public int x;                                 // Position en X depuis la gauche de l'espace aérien
         public int y;                                 // Position en Y depuis le haut de l'espace aérien
         private Random _alea = new Random();
+        public const int HEIGHT = 62;
+        public const int WIDTH = 50;
 
         // Constructeur
         public Ennemis(int x, int y)
@@ -48,14 +50,7 @@ namespace Player
         // De manière graphique
         public void Render(BufferedGraphics drawingSpace)
         {
-            drawingSpace.Graphics.DrawImage(Resources.saib, x, y, 125, 100);
-            drawingSpace.Graphics.DrawString($"{this}", TextHelpers.drawFont, TextHelpers.writingBrush, x + 5, y - 25);
-        }
-
-        // De manière textuelle
-        public override string ToString()
-        {
-            return $"Saibaman ({((int)((double)hp / 1000 * 100)).ToString()}%)";
+            drawingSpace.Graphics.DrawImage(Resources.saib, x, y, HEIGHT, WIDTH);
         }
 
 

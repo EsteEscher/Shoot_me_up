@@ -1,3 +1,5 @@
+using Player.Helpers;
+
 namespace Player
 {
     internal static class Program
@@ -15,7 +17,7 @@ namespace Player
             Player p1 = new Player(GameSpace.WIDTH / 2, GameSpace.HEIGHT / 2, "Goku");
             List<Ennemis> army = new List<Ennemis>();
             for (int i = 0; i < 10; i++)
-                army.Add(new Ennemis(GameSpace.WIDTH / 2, GameSpace.HEIGHT / 2));
+                army.Add(new Ennemis(RandomHelpers.Next(10, GameSpace.WIDTH - 30), 10));
 
 
             // Démarrage
