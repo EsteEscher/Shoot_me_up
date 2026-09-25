@@ -71,7 +71,6 @@ namespace Player
             if (_x == _player.x && _y == _player.y)
             {
                 state = State.STOPPING;
-                Thread.Sleep(interval*5);
                 state = State.EXPLOSING;
                 return;
             }

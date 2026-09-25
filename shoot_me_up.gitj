@@ -295,6 +295,32 @@
       "description": "",
       "duration": 25,
       "status": "Done"
+    },
+    {
+      "id": "25667dfc-40e4-4ffa-bd9f-8360c2655ec0",
+      "type": "commitless",
+      "author": [
+        "esteban-escher",
+        "EsteEscher"
+      ],
+      "date": "2026-09-25T14:33:00.000Z",
+      "name": "Chore(JDT) Remplir journal",
+      "description": "",
+      "duration": 5,
+      "status": "Done"
+    },
+    {
+      "id": "1807d632-70da-46be-a94c-6dd02c523e21",
+      "type": "commitpatch",
+      "sha": "144d15f1ffbb121e5f56dcc796c1896b374f033b",
+      "url": "https://github.com/EsteEscher/Shoot_me_up/commit/144d15f1ffbb121e5f56dcc796c1896b374f033b",
+      "author": "EsteEscher",
+      "patch": true,
+      "date": "2026-09-25T14:20:00.000Z",
+      "name": "Feat(code) les ennemis poursuivent le joueur maintenant quand ils sont proches",
+      "description": "",
+      "duration": 30,
+      "status": "Done"
     }
   ]
 }
