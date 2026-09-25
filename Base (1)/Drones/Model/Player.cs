@@ -9,6 +9,7 @@ namespace Player
         public int hp;                                // Ces Pv                      
         public int x;                                 // Position en X depuis la gauche de l'espace aérien
         public int y;                                 // Position en Y depuis le haut de l'espace aérien
+
         private Random _alea = new Random();
 
         // Constructeur

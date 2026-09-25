@@ -12,18 +12,22 @@ namespace Player
     public class Ennemis
     {
         public int hp;                                // Ces Pv                      
-        public int x;                                 // Position en X depuis la gauche de l'espace aérien
-        public int y;                                 // Position en Y depuis le haut de l'espace aérien
+        private int _x;                                 // Position en X depuis la gauche de l'espace aérien
+        private int _y;                                 // Position en Y depuis le haut de l'espace aérien
         private Random _alea = new Random();
-        public const int HEIGHT = 62;
-        public const int WIDTH = 50;
+        public const int HEIGHTSIZE = 62;
+        public const int WIDTHSIZE = 50;
+        private int _targetX;
+
+        public int Y { get => _y; set => _y = value; }
+        public int X { get => _x; set => _x = value; }
 
         // Constructeur
         public Ennemis(int x, int y)
         {
             Random alea = new Random();
-            this.x = x;
-            this.y = y;
+            this.X = x;
+            this.Y = y;
             hp = 3; // Leur Pv
         }
 
@@ -31,6 +35,11 @@ namespace Player
         // que 'interval' millisecondes se sont écoulées
         public void Update(int interval)
         {
+            if (_y != GameSpace.HEIGHT)
+            {
+                _y++;
+            }
+                
         }
 
         // Choisit une nouvelle vitesse aléatoirement
@@ -50,7 +59,7 @@ namespace Player
         // De manière graphique
         public void Render(BufferedGraphics drawingSpace)
         {
-            drawingSpace.Graphics.DrawImage(Resources.saib, x, y, HEIGHT, WIDTH);
+            drawingSpace.Graphics.DrawImage(Resources.saib, _x, _y, HEIGHTSIZE, WIDTHSIZE);
         }
 
 

@@ -256,6 +256,45 @@
       "description": "",
       "duration": 8,
       "status": "Done"
+    },
+    {
+      "id": "1e106b93-1847-4813-9e16-f94d977bf053",
+      "type": "commitless",
+      "author": [
+        "esteban-escher",
+        "EsteEscher"
+      ],
+      "date": "2026-09-25T12:15:00.000Z",
+      "name": "Meet(Teach) écoute sur l'explication lego",
+      "description": "",
+      "duration": 20,
+      "status": "Done"
+    },
+    {
+      "id": "4c37cc9b-ca53-455e-8c9d-e51c72b649c0",
+      "type": "commitpatch",
+      "sha": "7442e26057f9b68574a47251cd63afb018782fc0",
+      "url": "https://github.com/EsteEscher/Shoot_me_up/commit/7442e26057f9b68574a47251cd63afb018782fc0",
+      "author": "EsteEscher",
+      "patch": true,
+      "date": "2026-09-25T12:07:00.000Z",
+      "name": "Feat(Code) L'ennemi apparait de facon discéminé au fond de l'écran",
+      "description": "",
+      "duration": 25,
+      "status": "Done"
+    },
+    {
+      "id": "c2048ff8-8404-438a-91b8-df82916ee6ae",
+      "type": "commitpatch",
+      "sha": "71952e73b13d652473861c3d238c63e105590916",
+      "url": "https://github.com/EsteEscher/Shoot_me_up/commit/71952e73b13d652473861c3d238c63e105590916",
+      "author": "EsteEscher",
+      "patch": true,
+      "date": "2026-09-25T11:42:00.000Z",
+      "name": "Feat(Code) L'ennemi apparait maintenant à l'écran",
+      "description": "",
+      "duration": 25,
+      "status": "Done"
     }
   ]
 }

@@ -52,6 +52,10 @@ namespace Player
         private void Update(int interval)
         {
             _player.Update(interval);
+            foreach (Ennemis ennemis in _ennemis)
+            {
+                ennemis.Update(interval);
+            }
         }
 
         // Méthode appelée à chaque frame
