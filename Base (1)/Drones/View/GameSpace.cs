@@ -1,3 +1,5 @@
+using System.Runtime.InteropServices;
+
 namespace Player
 {
     // La classe AirSpace représente le territoire au dessus duquel les drones peuvent voler
@@ -11,13 +13,13 @@ namespace Player
 
         // La flotte est l'ensemble des drones qui évoluent dans notre espace aérien
         private Player _player;
-        private Ennemis _ennemis;
+        private List<Ennemis> _ennemis= new List<Ennemis>();
 
         BufferedGraphicsContext currentContext;
         BufferedGraphics gamespace;
 
         // Initialisation de l'espace aérien avec un certain nombre de drones
-        public GameSpace(Player player)
+        public GameSpace(Player player, List<Ennemis> ennemis)
         {
             InitializeComponent();
             ClientSize = new Size(WIDTH, HEIGHT);
@@ -28,6 +30,7 @@ namespace Player
             // dimensions the same size as the drawing surface of the form.
             gamespace = currentContext.Allocate(this.CreateGraphics(), this.DisplayRectangle);
             this._player = player;
+            this._ennemis = ennemis;
         }
 
         // Affichage de la situation actuelle
@@ -36,6 +39,11 @@ namespace Player
             gamespace.Graphics.Clear(Color.AliceBlue);
 
             _player.Render(gamespace);
+
+            foreach (Ennemis ennemis in _ennemis)
+            {
+                ennemis.Render(gamespace);
+            }
 
             gamespace.Render();
         }

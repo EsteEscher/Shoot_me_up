@@ -26,17 +26,17 @@ namespace Player
         {
         }
 
-        // Choisit une nouvelle vitesse aléatoirement
+        // Choisit vitesse
         public void ChangeDirection(int side)
         {
             if (side == 1)
-                x += 3;
+                x += 5;
             if (side == 2)
-                y -= 3;
+                y -= 5;
             if (side == 3)
-                x -= 3;
+                x -= 5;
             if (side == 4)
-                y += 3;
+                y += 5;
 
             //Barriere invisible
             if (x <= 0)
