@@ -14,14 +14,13 @@ namespace Player
         // La flotte est l'ensemble des drones qui évoluent dans notre espace aérien
         private Player _player;
         private List<Ennemis> _ennemis= new List<Ennemis>();
+        private List<Tirs> _bullets = new List<Tirs>();
 
         BufferedGraphicsContext currentContext;
         BufferedGraphics gamespace;
 
-        //public List<Ennemis> Ennemis { get => _ennemis; set => _ennemis = value; }
-
         // Initialisation de l'espace aérien avec un certain nombre de drones
-        public GameSpace(Player player, List<Ennemis> ennemis)
+        public GameSpace(Player player, List<Ennemis> ennemis, List<Tirs> bullets)
         {
             InitializeComponent();
             ClientSize = new Size(WIDTH, HEIGHT);
@@ -33,6 +32,7 @@ namespace Player
             gamespace = currentContext.Allocate(this.CreateGraphics(), this.DisplayRectangle);
             this._player = player;
             this._ennemis = ennemis;
+            this._bullets = bullets;
         }
 
         // Affichage de la situation actuelle
@@ -99,9 +99,9 @@ namespace Player
                     _player.ChangeDirection(4);
                     break;
 
-                case Keys.RButton:
+                case Keys.LButton:
                 case Keys.Space:
-
+                    _bullets.Add(new Tirs(_player.x, _player.y,5));
                     break;
             }
         }

@@ -321,6 +321,19 @@
       "description": "",
       "duration": 30,
       "status": "Done"
+    },
+    {
+      "id": "2f0f81e8-fd3b-4696-9183-ca45db608347",
+      "type": "commitpatch",
+      "sha": "22baafee5f8dde6ed109eb1c466a2fe4d91315a3",
+      "url": "https://github.com/EsteEscher/Shoot_me_up/commit/22baafee5f8dde6ed109eb1c466a2fe4d91315a3",
+      "author": "EsteEscher",
+      "patch": true,
+      "date": "2026-10-02T14:07:00.000Z",
+      "name": "Feat(code) Création des tirs",
+      "description": "",
+      "duration": 60,
+      "status": "WIP"
     }
   ]
 }

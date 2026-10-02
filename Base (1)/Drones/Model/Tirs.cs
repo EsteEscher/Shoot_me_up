@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Game.Properties;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -19,10 +20,9 @@ namespace Player
             _y = y;
             _bulletsize = bulletsize;
         }
-
-        public void Shoot()
+        public void Render(BufferedGraphics drawingSpace)
         {
-            
+            drawingSpace.Graphics.DrawImage(Resources.allyshot, GameSpace.WIDTH / 2, GameSpace.HEIGHT / 2, 100, 100);
         }
     }
 }

@@ -14,7 +14,7 @@ namespace Player
             // see https://aka.ms/applicationconfiguration.
             ApplicationConfiguration.Initialize();
 
-            Player p1 = new Player(GameSpace.WIDTH / 2, GameSpace.HEIGHT / 2, "Goku");
+            Player p1 = new Player(GameSpace.WIDTH / 2, GameSpace.HEIGHT - 100, "Goku");
             List<Ennemis> army = new List<Ennemis>();
             for (int i = 0; i < 10; i++)
                 army.Add(new Ennemis(RandomHelpers.Next(10, GameSpace.WIDTH - 40), 10, p1));
@@ -23,7 +23,7 @@ namespace Player
 
 
             // Démarrage
-            Application.Run(new GameSpace(p1, army));
+            Application.Run(new GameSpace(p1, army, bullets));
 
 
         }
