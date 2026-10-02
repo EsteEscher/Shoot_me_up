@@ -51,6 +51,8 @@ namespace Player
                 _y += 5;
             
             }
+
+            // Mouvement dans l'espace du joueur les ennemis se lancent dans la traque du joueur
             if (_y >= GameSpace.HEIGHT - 200 && state != State.EXPLOSING)
             {
                 state = State.SEEKING;

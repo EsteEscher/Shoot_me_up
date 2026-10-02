@@ -19,6 +19,8 @@ namespace Player
             for (int i = 0; i < 10; i++)
                 army.Add(new Ennemis(RandomHelpers.Next(10, GameSpace.WIDTH - 40), 10, p1));
 
+            List<Tirs> bullets = new List<Tirs>();
+
 
             // Démarrage
             Application.Run(new GameSpace(p1, army));

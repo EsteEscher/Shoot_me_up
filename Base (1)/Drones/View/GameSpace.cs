@@ -18,7 +18,7 @@ namespace Player
         BufferedGraphicsContext currentContext;
         BufferedGraphics gamespace;
 
-        public List<Ennemis> Ennemis { get => _ennemis; set => _ennemis = value; }
+        //public List<Ennemis> Ennemis { get => _ennemis; set => _ennemis = value; }
 
         // Initialisation de l'espace aérien avec un certain nombre de drones
         public GameSpace(Player player, List<Ennemis> ennemis)
@@ -74,6 +74,7 @@ namespace Player
             this.Render();
         }
 
+        //Mouvement
         private void AirSpace_KeyDown(object sender, KeyEventArgs e)
         {
             switch (e.KeyCode)
@@ -100,6 +101,7 @@ namespace Player
 
                 case Keys.RButton:
                 case Keys.Space:
+
                     break;
             }
         }
