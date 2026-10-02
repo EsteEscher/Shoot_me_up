@@ -18,6 +18,8 @@ namespace Player
         BufferedGraphicsContext currentContext;
         BufferedGraphics gamespace;
 
+        public List<Ennemis> Ennemis { get => _ennemis; set => _ennemis = value; }
+
         // Initialisation de l'espace aérien avec un certain nombre de drones
         public GameSpace(Player player, List<Ennemis> ennemis)
         {
@@ -52,10 +54,17 @@ namespace Player
         private void Update(int interval)
         {
             _player.Update(interval);
-            foreach (Ennemis ennemis in _ennemis)
+
+            for (int i = _ennemis.Count -1; i >= 0; i--)
             {
-                ennemis.Update(interval);
+                _ennemis[i].Update(interval);
+
+                if (_ennemis[i].state == global::Player.Ennemis.State.DEAD)
+                {
+                    _ennemis.RemoveAt(i);
+                }
             }
+
         }
 
         // Méthode appelée à chaque frame

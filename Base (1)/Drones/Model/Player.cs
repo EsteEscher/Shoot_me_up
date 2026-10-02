@@ -63,7 +63,7 @@ namespace Player
         // De manière graphique
         public void Render(BufferedGraphics drawingSpace)
         {
-            drawingSpace.Graphics.DrawImage(Resources.Goku, x, y, 125, 100);
+            drawingSpace.Graphics.DrawImage(Resources.Goku, x - 30 , y - 10, 125, 100);
             drawingSpace.Graphics.DrawString($"{this}", TextHelpers.drawFont, TextHelpers.writingBrush, x + 5, y - 25);
         }
 

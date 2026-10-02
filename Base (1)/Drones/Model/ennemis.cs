@@ -21,8 +21,9 @@ namespace Player
         private int _targetX;
         public State state = State.TRAVELLING;
         private Player _player;
+        private int _explosionTimer = 0;
 
-        public enum State { TRAVELLING, SEEKING, STOPPING, EXPLOSING }
+        public enum State { TRAVELLING, SEEKING, STOPPING, EXPLOSING, DEAD }
 
 
         public int Y { get => _y; set => _y = value; }
@@ -36,6 +37,8 @@ namespace Player
             this.Y = y;
             hp = 3; // Leur Pv
             this._player = player;
+            state = State.TRAVELLING;
+
         }
 
         // Cette méthode calcule le nouvel état dans lequel le drone se trouve après
@@ -48,7 +51,7 @@ namespace Player
                 _y += 5;
             
             }
-            if (_y >= GameSpace.HEIGHT - 200)
+            if (_y >= GameSpace.HEIGHT - 200 && state != State.EXPLOSING)
             {
                 state = State.SEEKING;
                 if (_player.x < _x)
@@ -72,8 +75,20 @@ namespace Player
             {
                 state = State.STOPPING;
                 state = State.EXPLOSING;
-                return;
             }
+            if (state == State.EXPLOSING)
+            {
+                if (state == State.EXPLOSING)
+                {
+                    _explosionTimer++;
+                    if (_explosionTimer >= 5) // Ajuste le nombre de frames visibles
+                    {
+                        state = State.DEAD;
+                    }
+                    return;
+                }
+            }
+
         }
 
         // Choisit une nouvelle vitesse aléatoirement
@@ -93,7 +108,7 @@ namespace Player
         // De manière graphique
         public void Render(BufferedGraphics drawingSpace)
         {
-            drawingSpace.Graphics.DrawImage(Resources.saib, _x, _y, HEIGHTSIZE, WIDTHSIZE);
+            drawingSpace.Graphics.DrawImage(state != State.EXPLOSING ? Resources.saib : Resources.boom, _x, _y, HEIGHTSIZE, WIDTHSIZE);
         }
 
 
