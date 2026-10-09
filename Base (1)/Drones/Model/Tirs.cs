@@ -16,9 +16,13 @@ namespace Player
         private int _bulletsizey;
         private double _dirx;
         private double _diry;
+        public double X => _x;
+        public double Y => _y;
+        public int SizeX => _bulletsizex;
+        public int SizeY => _bulletsizey;
 
 
-        public bool IsOutOfBounds => _y < -50;
+        public bool IsOutOfBounds => _y < -50 ||_x < -50 || _x > GameSpace.WIDTH || _y > GameSpace.HEIGHT +50;
 
         public Tirs(double startx, double starty,double targetx, double targety, int bulletsizex, int bulletsizey)
         {

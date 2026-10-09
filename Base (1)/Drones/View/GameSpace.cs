@@ -13,7 +13,7 @@ namespace Player
 
         // La flotte est l'ensemble des drones qui évoluent dans notre espace aérien
         private Player _player;
-        private List<Ennemis> _ennemis= new List<Ennemis>();
+        private List<Ennemis> _ennemis = new List<Ennemis>();
         private List<Tirs> _bullets = new List<Tirs>();
 
         BufferedGraphicsContext currentContext;
@@ -59,17 +59,56 @@ namespace Player
         {
             _player.Update(interval);
 
+            // 1. Mise à jour et nettoyage des tirs
             for (int i = _bullets.Count - 1; i >= 0; i--)
             {
-                _bullets[i].Update(interval);
+                Tirs tir = _bullets[i];
+                tir.Update(interval);
 
-                if (_bullets[i].IsOutOfBounds)
+                // Si le tir est sorti de l'écran, on l'enlève et on passe DIRECTEMENT au suivant !
+                if (tir.IsOutOfBounds)
+                {
+                    _bullets.RemoveAt(i);
+                    continue; // TRÈS IMPORTANT : ne pas exécuter la suite pour cet index !
+                }
+
+                bool hit = false;
+
+                // Hitbox du tir actuel (on utilise la variable 'tir' directement !)
+                Rectangle bulletRect = new Rectangle((int)tir.X, (int)tir.Y, tir.SizeX, tir.SizeY);
+
+                for (int j = _ennemis.Count - 1; j >= 0; j--)
+                {
+                    Ennemis ennemi = _ennemis[j];
+
+                    // On ignore les ennemis morts ou en train d'exploser
+                    if (ennemi.state == Ennemis.State.EXPLOSING || ennemi.state == Ennemis.State.DEAD)
+                        continue;
+
+                    Rectangle ennemiRect = new Rectangle(ennemi.X, ennemi.Y, Ennemis.WIDTHSIZE, Ennemis.HEIGHTSIZE);
+
+                    if (bulletRect.IntersectsWith(ennemiRect))
+                    {
+                        ennemi.hp--;
+
+                        if (ennemi.hp <= 0)
+                        {
+                            ennemi.state = Ennemis.State.EXPLOSING;
+                        }
+
+                        hit = true;
+                        break; // Le tir a touché, inutile de tester les autres ennemis
+                    }
+                }
+
+                // Si ce tir a touché un ennemi, on le retire de la liste
+                if (hit)
                 {
                     _bullets.RemoveAt(i);
                 }
             }
 
-            for (int i = _ennemis.Count -1; i >= 0; i--)
+            for (int i = _ennemis.Count - 1; i >= 0; i--)
             {
                 _ennemis[i].Update(interval);
 
@@ -120,7 +159,7 @@ namespace Player
                     int startx = _player.x + 15;
                     int starty = _player.y;
 
-                    _bullets.Add(new Tirs(startx,starty,mousePos.X,mousePos.Y,40, 40));
+                    _bullets.Add(new Tirs(startx, starty, mousePos.X, mousePos.Y, 40, 40));
                     break;
             }
         }
