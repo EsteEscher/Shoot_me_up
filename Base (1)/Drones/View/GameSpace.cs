@@ -41,6 +41,10 @@ namespace Player
             gamespace.Graphics.Clear(Color.AliceBlue);
 
             _player.Render(gamespace);
+            foreach (Tirs tir in _bullets)
+            {
+                tir.Render(gamespace);
+            }
 
             foreach (Ennemis ennemis in _ennemis)
             {
@@ -54,6 +58,16 @@ namespace Player
         private void Update(int interval)
         {
             _player.Update(interval);
+
+            for (int i = _bullets.Count - 1; i >= 0; i--)
+            {
+                _bullets[i].Update(interval);
+
+                if (_bullets[i].IsOutOfBounds)
+                {
+                    _bullets.RemoveAt(i);
+                }
+            }
 
             for (int i = _ennemis.Count -1; i >= 0; i--)
             {
@@ -101,7 +115,13 @@ namespace Player
 
                 case Keys.LButton:
                 case Keys.Space:
-                    _bullets.Add(new Tirs(_player.x, _player.y,5));
+                    //Position de la souris
+                    Point mousePos = this.PointToClient(Cursor.Position);
+
+                    int startx = _player.x + 15;
+                    int starty = _player.y;
+
+                    _bullets.Add(new Tirs(startx,starty,mousePos.X,mousePos.Y,40, 40));
                     break;
             }
         }

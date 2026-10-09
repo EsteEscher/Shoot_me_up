@@ -334,6 +334,32 @@
       "description": "",
       "duration": 60,
       "status": "WIP"
+    },
+    {
+      "id": "5e1e391f-140e-4d4f-8639-944573e82fa4",
+      "type": "commitpatch",
+      "sha": "4f35c8b737fff8e0fe3e38370122be102bd267cc",
+      "url": "https://github.com/EsteEscher/Shoot_me_up/commit/4f35c8b737fff8e0fe3e38370122be102bd267cc",
+      "author": "EsteEscher",
+      "patch": true,
+      "date": "2026-10-02T14:30:00.000Z",
+      "name": "Feat(code) travail sur les tirs",
+      "description": "Je ne suis pas très productif cet après midi malheureusement je n'arrive pas a très bien réfléchir mais je vais travailler ce week-end pour compenser",
+      "duration": 30,
+      "status": "WIP"
+    },
+    {
+      "id": "d3755f75-8ed0-4b13-a70e-2f7b52f274fd",
+      "type": "commitless",
+      "author": [
+        "esteban-escher",
+        "EsteEscher"
+      ],
+      "date": "2026-10-02T14:31:00.000Z",
+      "name": "Chore(jdt) journal compléter",
+      "description": "",
+      "duration": 5,
+      "status": "DONE"
     }
   ]
 }
