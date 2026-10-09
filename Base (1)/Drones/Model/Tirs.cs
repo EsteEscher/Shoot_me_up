@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Drawing.Drawing2D;
 
 namespace Player
 {
@@ -16,6 +17,7 @@ namespace Player
         private int _bulletsizey;
         private double _dirx;
         private double _diry;
+        private float _angle;
         public double X => _x;
         public double Y => _y;
         public int SizeX => _bulletsizex;
@@ -46,7 +48,7 @@ namespace Player
                 _dirx = 0;
                 _diry = -_SPEED;
             }
-
+            _angle = (float)(Math.Atan2(deltay, deltax) * 180 / Math.PI) + 90f;
         }
 
         public void Update(int interval)
@@ -56,6 +58,9 @@ namespace Player
         }
         public void Render(BufferedGraphics drawingSpace)
         {
+            Graphics g = drawingSpace.Graphics;
+            GraphicsState state = g.Save(); 
+            g.TranslateTransform((float)_x + _bulletsizex / 2f, (float)_y + _bulletsizey /2f);
             drawingSpace.Graphics.DrawImage(Resources.allyshot, (float)_x, (float)_y, _bulletsizex, _bulletsizey);
         }
     }
