@@ -113,7 +113,6 @@ namespace Player
                     _player.ChangeDirection(4);
                     break;
 
-                case Keys.LButton:
                 case Keys.Space:
                     //Position de la souris
                     Point mousePos = this.PointToClient(Cursor.Position);

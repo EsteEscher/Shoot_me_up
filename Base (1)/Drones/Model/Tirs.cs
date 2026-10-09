@@ -10,8 +10,8 @@ namespace Player
     public class Tirs
     {
         private const int _SPEED = 10;
-        private int _x;
-        private int _y;
+        private double _x;
+        private double _y;
         private int _bulletsizex;
         private int _bulletsizey;
         private double _dirx;
@@ -20,7 +20,7 @@ namespace Player
 
         public bool IsOutOfBounds => _y < -50;
 
-        public Tirs(int startx, int starty,int targetx, int targety, int bulletsizex, int bulletsizey)
+        public Tirs(double startx, double starty,double targetx, double targety, int bulletsizex, int bulletsizey)
         {
             _x = startx;
             _y = starty;
@@ -47,11 +47,12 @@ namespace Player
 
         public void Update(int interval)
         {
-            _y -= _SPEED;
+            _x += _dirx;
+            _y += _diry;
         }
         public void Render(BufferedGraphics drawingSpace)
         {
-            drawingSpace.Graphics.DrawImage(Resources.allyshot, _x, _y, _bulletsizex, _bulletsizey);
+            drawingSpace.Graphics.DrawImage(Resources.allyshot, (float)_x, (float)_y, _bulletsizex, _bulletsizey);
         }
     }
 }
