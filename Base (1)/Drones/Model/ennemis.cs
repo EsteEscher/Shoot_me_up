@@ -45,7 +45,7 @@ namespace Player
         // que 'interval' millisecondes se sont écoulées
         public void Update(int interval)
         {
-            if (_y <= GameSpace.HEIGHT - 200)
+            if (_y <= GameSpace.HEIGHT - 200 && state != State.EXPLOSING)
             {
                 state = State.TRAVELLING;
                 _y += 5;
@@ -110,7 +110,7 @@ namespace Player
         // De manière graphique
         public void Render(BufferedGraphics drawingSpace)
         {
-            drawingSpace.Graphics.DrawImage(state != State.EXPLOSING ? Resources.saib : Resources.boom, _x, _y, HEIGHTSIZE, WIDTHSIZE);
+            drawingSpace.Graphics.DrawImage(state != State.EXPLOSING ? Resources.saib : Resources.boom, _x, _y, WIDTHSIZE, HEIGHTSIZE);
         }
 
 

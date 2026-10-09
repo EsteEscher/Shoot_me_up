@@ -59,33 +59,30 @@ namespace Player
         {
             _player.Update(interval);
 
-            // 1. Mise à jour et nettoyage des tirs
             for (int i = _bullets.Count - 1; i >= 0; i--)
             {
                 Tirs tir = _bullets[i];
                 tir.Update(interval);
 
-                // Si le tir est sorti de l'écran, on l'enlève et on passe DIRECTEMENT au suivant !
                 if (tir.IsOutOfBounds)
                 {
                     _bullets.RemoveAt(i);
-                    continue; // TRÈS IMPORTANT : ne pas exécuter la suite pour cet index !
+                    continue;
                 }
 
                 bool hit = false;
 
-                // Hitbox du tir actuel (on utilise la variable 'tir' directement !)
                 Rectangle bulletRect = new Rectangle((int)tir.X, (int)tir.Y, tir.SizeX, tir.SizeY);
 
                 for (int j = _ennemis.Count - 1; j >= 0; j--)
                 {
                     Ennemis ennemi = _ennemis[j];
 
-                    // On ignore les ennemis morts ou en train d'exploser
+
                     if (ennemi.state == Ennemis.State.EXPLOSING || ennemi.state == Ennemis.State.DEAD)
                         continue;
 
-                    Rectangle ennemiRect = new Rectangle(ennemi.X, ennemi.Y, Ennemis.WIDTHSIZE, Ennemis.HEIGHTSIZE);
+                    Rectangle ennemiRect = new Rectangle(ennemi.X - 5, ennemi.Y - 5, Ennemis.WIDTHSIZE + 10, Ennemis.HEIGHTSIZE + 10);
 
                     if (bulletRect.IntersectsWith(ennemiRect))
                     {
@@ -97,11 +94,10 @@ namespace Player
                         }
 
                         hit = true;
-                        break; // Le tir a touché, inutile de tester les autres ennemis
+                        break;
                     }
                 }
 
-                // Si ce tir a touché un ennemi, on le retire de la liste
                 if (hit)
                 {
                     _bullets.RemoveAt(i);
