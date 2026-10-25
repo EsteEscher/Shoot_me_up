@@ -1,9 +1,6 @@
 ﻿using Game.Properties;
+using Player.Helpers;
 using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Drawing.Drawing2D;
 
 namespace Player
@@ -18,15 +15,15 @@ namespace Player
         private double _dirx;
         private double _diry;
         private float _angle;
+
         public double X => _x;
         public double Y => _y;
         public int SizeX => _bulletsizex;
         public int SizeY => _bulletsizey;
 
+        public bool IsOutOfBounds => _y < -50 || _x < -50 || _x > GameSpace.WIDTH + 50 || _y > GameSpace.HEIGHT + 50;
 
-        public bool IsOutOfBounds => _y < -50 ||_x < -50 || _x > GameSpace.WIDTH || _y > GameSpace.HEIGHT +50;
-
-        public Tirs(double startx, double starty,double targetx, double targety, int bulletsizex, int bulletsizey)
+        public Tirs(double startx, double starty, double targetx, double targety, int bulletsizex, int bulletsizey)
         {
             _x = startx;
             _y = starty;
@@ -48,7 +45,9 @@ namespace Player
                 _dirx = 0;
                 _diry = -_SPEED;
             }
-            _angle = (float)(Math.Atan2(deltay, deltax) * 180 / Math.PI) + 90f;
+
+            // Calcul de l'angle en degrés
+            _angle = (float)(Math.Atan2(deltay, deltax) * 180.0 / Math.PI) + 90f;
         }
 
         public void Update(int interval)
@@ -56,12 +55,22 @@ namespace Player
             _x += _dirx;
             _y += _diry;
         }
+
         public void Render(BufferedGraphics drawingSpace)
         {
             Graphics g = drawingSpace.Graphics;
-            GraphicsState state = g.Save(); 
-            g.TranslateTransform((float)_x + _bulletsizex / 2f, (float)_y + _bulletsizey /2f);
-            drawingSpace.Graphics.DrawImage(Resources.allyshot, (float)_x, (float)_y, _bulletsizex, _bulletsizey);
+            GraphicsState state = g.Save();
+            g.TranslateTransform((float)_x + _bulletsizex / 2f, (float)_y + _bulletsizey / 2f);
+            g.RotateTransform(_angle);
+
+            g.DrawImage(
+                Resources.allyshot,
+                -_bulletsizex / 2f,
+                -_bulletsizey / 2f,
+                _bulletsizex,
+                _bulletsizey
+            );
+            g.Restore(state);
         }
     }
 }

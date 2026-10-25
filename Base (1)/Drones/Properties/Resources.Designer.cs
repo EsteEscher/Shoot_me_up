@@ -93,6 +93,16 @@ namespace Game.Properties {
         /// <summary>
         ///   Recherche une ressource localisée de type System.Drawing.Bitmap.
         /// </summary>
+        internal static System.Drawing.Bitmap FlyingNimbus {
+            get {
+                object obj = ResourceManager.GetObject("FlyingNimbus", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Recherche une ressource localisée de type System.Drawing.Bitmap.
+        /// </summary>
         internal static System.Drawing.Bitmap Goku {
             get {
                 object obj = ResourceManager.GetObject("Goku", resourceCulture);

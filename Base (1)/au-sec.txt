@@ -1,0 +1,826 @@
+using Game.Properties;
+using Player.Helpers;
+using System;
+using System.Drawing.Drawing2D;
+
+namespace Player
+{
+    public class TirEnnemi
+    {
+        private const double SPEED = 7.0; // Vitesse du projectile ennemi
+        private double _x;
+        private double _y;
+        private double _dirx;
+        private double _diry;
+        private float _angle;
+
+        public int SizeX { get; private set; } = 25;
+        public int SizeY { get; private set; } = 25;
+
+        public double X => _x;
+        public double Y => _y;
+
+        // Sortie de l'écran par n'importe quel côté
+        public bool IsOutOfBounds => _x < -50 || _x > GameSpace.WIDTH + 50 || _y < -50 || _y > GameSpace.HEIGHT + 50;
+
+        public TirEnnemi(double startX, double startY, double targetX, double targetY)
+        {
+            _x = startX;
+            _y = startY;
+
+            double deltaX = targetX - startX;
+            double deltaY = targetY - startY;
+
+            double distance = MathHelpers.Distance(startX, startY, targetX, targetY);
+
+            if (distance > 0)
+            {
+                _dirx = (deltaX / distance) * SPEED;
+                _diry = (deltaY / distance) * SPEED;
+            }
+            else
+            {
+                _dirx = 0;
+                _diry = SPEED; // Vers le bas par défaut
+            }
+
+            // Orientation du tir vers sa cible (ajuste +90f selon ton sprite)
+            _angle = (float)(Math.Atan2(deltaY, deltaX) * 180.0 / Math.PI) + 90f;
+        }
+
+        public void Update(int interval)
+        {
+            _x += _dirx;
+            _y += _diry;
+        }
+
+        public void Render(BufferedGraphics drawingSpace)
+        {
+            Graphics g = drawingSpace.Graphics;
+            GraphicsState state = g.Save();
+
+            g.TranslateTransform((float)_x + SizeX / 2f, (float)_y + SizeY / 2f);
+            g.RotateTransform(_angle);
+
+            // Remplace Resources.allyshot par le sprite de tir des Saibamens si tu en as un !
+            g.DrawImage(Resources.allyshot, -SizeX / 2f, -SizeY / 2f, SizeX, SizeY);
+
+            g.Restore(state);
+        }
+    }
+}
+
+using Player.Helpers;
+using Game.Properties;
+using System.Drawing;
+using System.Collections.Generic;
+
+namespace Player
+{
+    public class Player
+    {
+        public int hp;
+        public int x;
+        public int y;
+
+        public Player(int startX, int startY, string name)
+        {
+            x = startX;
+            y = startY;
+            hp = 3;
+        }
+
+        public void Update(int interval)
+        {
+        }
+
+        public void ChangeDirection(int side, List<Kinto> kintos)
+        {
+            int nextX = x;
+            int nextY = y;
+
+            if (side == 1)
+                nextX += 10;
+            if (side == 2)
+                nextY -= 10;
+            if (side == 3)
+                nextX -= 10;
+            if (side == 4)
+                nextY += 10;
+
+            if (nextX <= 0)
+                nextX = 0;
+            if (nextX >= GameSpace.WIDTH - 100)
+                nextX = GameSpace.WIDTH - 100;
+            if (nextY <= 0)
+                nextY = 0;
+            if (nextY >= GameSpace.HEIGHT - 100)
+                nextY = GameSpace.HEIGHT - 100;
+
+            Rectangle nextPlayerRect = new Rectangle(nextX + 10, nextY + 10, 60, 70);
+
+            bool blocked = false;
+            foreach (Kinto kinto in kintos)
+            {
+                if (kinto.IsDestroyed) continue;
+
+                Rectangle kintoRect = new Rectangle(kinto.X, kinto.Y, kinto.Width, kinto.Height);
+                if (nextPlayerRect.IntersectsWith(kintoRect))
+                {
+                    blocked = true;
+                    break;
+                }
+            }
+
+            if (!blocked)
+            {
+                x = nextX;
+                y = nextY;
+            }
+        }
+
+        public void Render(BufferedGraphics drawingSpace)
+        {
+            drawingSpace.Graphics.DrawImage(Resources.Goku, x - 30, y - 10, 125, 100);
+            drawingSpace.Graphics.DrawString($"{this}", TextHelpers.drawFont, TextHelpers.writingBrush, x + 5, y - 25);
+        }
+
+        public override string ToString()
+        {
+            return $"Goku (PV: {hp})";
+        }
+    }
+}
+
+using Game.Properties;
+using Player.Helpers;
+using System;
+using System.Collections.Generic;
+using System.Drawing;
+
+namespace Player
+{
+    public class Ennemis
+    {
+        public const int POINTS_VALUE = 100;
+        public const int HEIGHTSIZE = 62;
+        public const int WIDTHSIZE = 50;
+
+        public int hp;
+        private int _x;
+        private int _y;
+        public State state = State.TRAVELLING;
+        private Player _player;
+        private int _explosionTimer = 0;
+        private int _shootCooldown = RandomHelpers.Next(10, 40);
+
+        public enum State { TRAVELLING, SEEKING, STOPPING, EXPLOSING, DEAD }
+
+        public int Y { get => _y; set => _y = value; }
+        public int X { get => _x; set => _x = value; }
+
+        public Ennemis(int x, int y, Player player)
+        {
+            this.X = x;
+            this.Y = y;
+            hp = 3;
+            this._player = player;
+            state = State.TRAVELLING;
+        }
+
+        public void Update(int interval, List<Kinto> kintos)
+        {
+            if (state == State.EXPLOSING || state == State.DEAD)
+            {
+                _explosionTimer++;
+                if (_explosionTimer >= 5)
+                {
+                    state = State.DEAD;
+                }
+                return;
+            }
+
+            int nextX = _x;
+            int nextY = _y;
+
+            if (_y <= GameSpace.HEIGHT - 200)
+            {
+                state = State.TRAVELLING;
+                nextY += 5;
+            }
+            else
+            {
+                state = State.SEEKING;
+                if (_player.x < _x) nextX--;
+                if (_player.x > _x) nextX++;
+                if (_player.y < _y) nextY--;
+                if (_player.y > _y) nextY++;
+            }
+
+            Rectangle nextEnnemiRect = new Rectangle(nextX, nextY, WIDTHSIZE, HEIGHTSIZE);
+
+            bool blocked = false;
+            foreach (Kinto kinto in kintos)
+            {
+                if (kinto.IsDestroyed) continue;
+
+                Rectangle kintoRect = new Rectangle(kinto.X, kinto.Y, kinto.Width, kinto.Height);
+                if (nextEnnemiRect.IntersectsWith(kintoRect))
+                {
+                    blocked = true;
+                    kinto.TakeDamage(1);
+                    break;
+                }
+            }
+
+            if (!blocked)
+            {
+                _x = nextX;
+                _y = nextY;
+            }
+
+            if (Math.Abs(_x - _player.x) < 20 && Math.Abs(_y - _player.y) < 20)
+            {
+                state = State.EXPLOSING;
+                _player.hp--;
+            }
+        }
+
+        public TirEnnemi? TryShoot()
+        {
+            if (state == State.EXPLOSING || state == State.DEAD)
+                return null;
+
+            _shootCooldown--;
+            if (_shootCooldown <= 0)
+            {
+                _shootCooldown = RandomHelpers.Next(90, 220);
+
+                double spawnX = _x + WIDTHSIZE / 2.0;
+                double spawnY = _y + HEIGHTSIZE;
+
+                double targetX = _player.x + 30;
+                double targetY = _player.y + 20;
+
+                return new TirEnnemi(spawnX, spawnY, targetX, targetY);
+            }
+
+            return null;
+        }
+
+        public void Render(BufferedGraphics drawingSpace)
+        {
+            drawingSpace.Graphics.DrawImage(state != State.EXPLOSING ? Resources.saib : Resources.boom, _x, _y, WIDTHSIZE, HEIGHTSIZE);
+        }
+    }
+}
+
+using System.Drawing;
+
+namespace Player.Helpers
+{
+    internal static class TextHelpers
+    {
+        public static Font drawFont = new Font("Arial", 10);
+        public static Font bigFont = new Font("Arial", 28, FontStyle.Bold);
+        public static Font mediumFont = new Font("Arial", 16, FontStyle.Bold);
+
+        public static SolidBrush writingBrush = new SolidBrush(Color.Black);
+        public static SolidBrush redBrush = new SolidBrush(Color.DarkRed);
+        public static SolidBrush darkOverlayBrush = new SolidBrush(Color.FromArgb(180, 0, 0, 0));
+        public static SolidBrush whiteBrush = new SolidBrush(Color.White);
+    }
+}
+
+namespace Player.Helpers
+{
+    // Outils pour la génération de valeurs aléatoires
+    internal static class RandomHelpers
+    {
+        private static readonly Random alea = new Random();
+
+        // Valeur aléatoire entre 0 (inclus) et max (exclu)
+        public static int Next(int max) => alea.Next(max);
+
+        // Valeur aléatoire entre min (inclus) et max (exclu)
+        public static int Next(int min, int max) => alea.Next(min, max);
+    }
+}
+
+using Player.Helpers;
+using System.Drawing;
+using System.Windows.Forms;
+
+namespace Player
+{
+    public partial class GameSpace : Form
+    {
+        public static readonly int WIDTH = 1200;
+        public static readonly int HEIGHT = 600;
+
+        private int _waveNumber = 1;
+        private int _waveCooldown = 0;
+        private int _score = 0;
+        private bool _isGameOver = false;
+
+        private const int PLAYER_SHOOT_DELAY = 500;
+        private int _playerShootCooldown = 0;
+
+        private Player _player;
+        private List<Ennemis> _ennemis = new List<Ennemis>();
+        private List<Tirs> _bullets = new List<Tirs>();
+        private List<Kinto> _kintos = new List<Kinto>();
+        private List<TirEnnemi> _enemyBullets = new List<TirEnnemi>();
+
+        BufferedGraphicsContext currentContext;
+        BufferedGraphics gamespace;
+
+        public GameSpace(Player player, List<Ennemis> ennemis, List<Tirs> bullets)
+        {
+            InitializeComponent();
+            ClientSize = new Size(WIDTH, HEIGHT);
+
+            currentContext = BufferedGraphicsManager.Current;
+            gamespace = currentContext.Allocate(this.CreateGraphics(), this.DisplayRectangle);
+            this._player = player;
+            this._ennemis = ennemis;
+            this._bullets = bullets;
+
+            InitializeKintos();
+        }
+
+        private void InitializeKintos()
+        {
+            _kintos.Clear();
+            int kintoY = HEIGHT - 200;
+            int spacing = WIDTH / 6;
+
+            for (int i = 1; i <= 5; i++)
+            {
+                _kintos.Add(new Kinto((i * spacing) - 45, kintoY));
+            }
+        }
+
+        private void RestartGame()
+        {
+            _player.hp = 3;
+            _player.x = WIDTH / 2;
+            _player.y = HEIGHT - 100;
+
+            _score = 0;
+            _waveNumber = 1;
+            _waveCooldown = 0;
+            _playerShootCooldown = 0;
+            _isGameOver = false;
+
+            _bullets.Clear();
+            _enemyBullets.Clear();
+            _ennemis.Clear();
+
+            InitializeKintos();
+            SpawnWave();
+        }
+
+        private void Render()
+        {
+            gamespace.Graphics.Clear(Color.AliceBlue);
+
+            _player.Render(gamespace);
+
+            foreach (Tirs tir in _bullets)
+            {
+                tir.Render(gamespace);
+            }
+
+            foreach (Ennemis ennemis in _ennemis)
+            {
+                ennemis.Render(gamespace);
+            }
+
+            foreach (Kinto kinto in _kintos)
+            {
+                kinto.Render(gamespace);
+            }
+
+            foreach (TirEnnemi enemyTir in _enemyBullets)
+            {
+                enemyTir.Render(gamespace);
+            }
+
+            // HUD
+            gamespace.Graphics.DrawString($"Vague : {_waveNumber}", TextHelpers.drawFont, TextHelpers.writingBrush, 20, 20);
+            gamespace.Graphics.DrawString($"Score : {_score} pts", TextHelpers.drawFont, TextHelpers.writingBrush, 20, 40);
+            gamespace.Graphics.DrawString($"PV Goku : {_player.hp}", TextHelpers.drawFont, TextHelpers.writingBrush, 20, 60);
+
+            string reloadStatus = _playerShootCooldown <= 0 ? "Tir : PRÊT" : "Tir : RECHARGE...";
+            Brush statusBrush = _playerShootCooldown <= 0 ? Brushes.Green : Brushes.OrangeRed;
+            gamespace.Graphics.DrawString(reloadStatus, TextHelpers.drawFont, statusBrush, 20, 80);
+
+            // Écran de Game Over
+            if (_isGameOver)
+            {
+                gamespace.Graphics.FillRectangle(TextHelpers.darkOverlayBrush, 0, 0, WIDTH, HEIGHT);
+
+                string overText = "GAME OVER";
+                string scoreText = $"Score Final : {_score} pts (Vague {_waveNumber})";
+                string restartText = "Appuie sur 'R' pour retenter ta chance !";
+
+                SizeF overSize = gamespace.Graphics.MeasureString(overText, TextHelpers.bigFont);
+                SizeF scoreSize = gamespace.Graphics.MeasureString(scoreText, TextHelpers.mediumFont);
+                SizeF restartSize = gamespace.Graphics.MeasureString(restartText, TextHelpers.drawFont);
+
+                gamespace.Graphics.DrawString(overText, TextHelpers.bigFont, TextHelpers.redBrush, (WIDTH - overSize.Width) / 2, HEIGHT / 2 - 80);
+                gamespace.Graphics.DrawString(scoreText, TextHelpers.mediumFont, TextHelpers.whiteBrush, (WIDTH - scoreSize.Width) / 2, HEIGHT / 2 - 10);
+                gamespace.Graphics.DrawString(restartText, TextHelpers.drawFont, TextHelpers.whiteBrush, (WIDTH - restartSize.Width) / 2, HEIGHT / 2 + 40);
+            }
+
+            gamespace.Render();
+        }
+
+        private void Update(int interval)
+        {
+            if (_isGameOver) return;
+
+            if (_player.hp <= 0)
+            {
+                _player.hp = 0;
+                _isGameOver = true;
+                return;
+            }
+
+            // Décompte du cooldown en millisecondes réelles
+            if (_playerShootCooldown > 0)
+            {
+                _playerShootCooldown -= interval;
+                if (_playerShootCooldown < 0)
+                    _playerShootCooldown = 0;
+            }
+
+            _player.Update(interval);
+
+            // 1. Tirs alliés
+            for (int i = _bullets.Count - 1; i >= 0; i--)
+            {
+                Tirs tir = _bullets[i];
+                tir.Update(interval);
+
+                if (tir.IsOutOfBounds)
+                {
+                    _bullets.RemoveAt(i);
+                    continue;
+                }
+
+                bool hit = false;
+                Rectangle bulletRect = new Rectangle((int)tir.X, (int)tir.Y, tir.SizeX, tir.SizeY);
+
+                for (int k = _kintos.Count - 1; k >= 0; k--)
+                {
+                    Kinto kinto = _kintos[k];
+                    if (kinto.IsDestroyed) continue;
+
+                    Rectangle kintoRect = new Rectangle(kinto.X, kinto.Y, kinto.Width, kinto.Height);
+                    if (bulletRect.IntersectsWith(kintoRect))
+                    {
+                        kinto.TakeDamage(1);
+                        hit = true;
+                        break;
+                    }
+                }
+
+                if (!hit)
+                {
+                    for (int j = _ennemis.Count - 1; j >= 0; j--)
+                    {
+                        Ennemis ennemi = _ennemis[j];
+                        if (ennemi.state == Ennemis.State.EXPLOSING || ennemi.state == Ennemis.State.DEAD) continue;
+
+                        Rectangle ennemiRect = new Rectangle(ennemi.X - 5, ennemi.Y - 5, Ennemis.WIDTHSIZE + 10, Ennemis.HEIGHTSIZE + 10);
+                        if (bulletRect.IntersectsWith(ennemiRect))
+                        {
+                            ennemi.hp--;
+                            if (ennemi.hp <= 0)
+                            {
+                                ennemi.state = Ennemis.State.EXPLOSING;
+                                _score += Ennemis.POINTS_VALUE;
+                            }
+                            hit = true;
+                            break;
+                        }
+                    }
+                }
+
+                if (hit)
+                {
+                    _bullets.RemoveAt(i);
+                }
+            }
+
+            // 2. Ennemis
+            for (int i = _ennemis.Count - 1; i >= 0; i--)
+            {
+                _ennemis[i].Update(interval, _kintos);
+
+                if (_ennemis[i].state == Ennemis.State.DEAD)
+                {
+                    _ennemis.RemoveAt(i);
+                }
+            }
+
+            // 3. Tirs ennemis
+            foreach (Ennemis ennemi in _ennemis)
+            {
+                TirEnnemi? nouveauTir = ennemi.TryShoot();
+                if (nouveauTir != null)
+                {
+                    _enemyBullets.Add(nouveauTir);
+                }
+            }
+
+            // 4. Déplacement et collisions tirs ennemis
+            for (int i = _enemyBullets.Count - 1; i >= 0; i--)
+            {
+                TirEnnemi tir = _enemyBullets[i];
+                tir.Update(interval);
+
+                if (tir.IsOutOfBounds)
+                {
+                    _enemyBullets.RemoveAt(i);
+                    continue;
+                }
+
+                bool hit = false;
+                Rectangle bulletRect = new Rectangle((int)tir.X, (int)tir.Y, tir.SizeX, tir.SizeY);
+
+                for (int k = _kintos.Count - 1; k >= 0; k--)
+                {
+                    Kinto kinto = _kintos[k];
+                    if (kinto.IsDestroyed) continue;
+
+                    Rectangle kintoRect = new Rectangle(kinto.X, kinto.Y, kinto.Width, kinto.Height);
+                    if (bulletRect.IntersectsWith(kintoRect))
+                    {
+                        kinto.TakeDamage(1);
+                        hit = true;
+                        break;
+                    }
+                }
+
+                if (!hit)
+                {
+                    Rectangle playerRect = new Rectangle(_player.x, _player.y, 80, 80);
+                    if (bulletRect.IntersectsWith(playerRect))
+                    {
+                        _player.hp--;
+                        hit = true;
+                    }
+                }
+
+                if (hit)
+                {
+                    _enemyBullets.RemoveAt(i);
+                }
+            }
+
+            // 5. Vagues d'ennemis
+            if (_ennemis.Count == 0)
+            {
+                _waveCooldown++;
+
+                if (_waveCooldown >= 60)
+                {
+                    _waveNumber++;
+                    SpawnWave();
+                    _waveCooldown = 0;
+                }
+            }
+
+            // 6. Régénération des Kintos
+            foreach (Kinto kinto in _kintos)
+            {
+                kinto.Update(interval);
+            }
+        }
+
+        private void SpawnWave()
+        {
+            int enemiesCount = 4 + (_waveNumber * 2);
+
+            for (int i = 0; i < enemiesCount; i++)
+            {
+                int spawnX = RandomHelpers.Next(30, WIDTH - Ennemis.WIDTHSIZE - 30);
+                int spawnY = -RandomHelpers.Next(20, 150);
+
+                Ennemis nouvelEnnemi = new Ennemis(spawnX, spawnY, _player);
+                _ennemis.Add(nouvelEnnemi);
+            }
+        }
+
+        private void NewFrame(object sender, EventArgs e)
+        {
+            this.Update(ticker.Interval);
+            this.Render();
+        }
+
+        private void AirSpace_KeyDown(object sender, KeyEventArgs e)
+        {
+            if (_isGameOver)
+            {
+                if (e.KeyCode == Keys.R)
+                {
+                    RestartGame();
+                }
+                return;
+            }
+
+            switch (e.KeyCode)
+            {
+                case Keys.Right:
+                case Keys.D:
+                    _player.ChangeDirection(1, _kintos);
+                    break;
+
+                case Keys.Up:
+                case Keys.W:
+                    _player.ChangeDirection(2, _kintos);
+                    break;
+
+                case Keys.Left:
+                case Keys.A:
+                    _player.ChangeDirection(3, _kintos);
+                    break;
+
+                case Keys.Down:
+                case Keys.S:
+                    _player.ChangeDirection(4, _kintos);
+                    break;
+
+                case Keys.Space:
+                    if (_playerShootCooldown <= 0)
+                    {
+                        Point mousePos = this.PointToClient(Cursor.Position);
+                        int startx = _player.x + 15;
+                        int starty = _player.y;
+
+                        _bullets.Add(new Tirs(startx, starty, mousePos.X, mousePos.Y, 40, 40));
+                        _playerShootCooldown = PLAYER_SHOOT_DELAY; // 200 ms avant le tir suivant
+                    }
+                    break;
+            }
+        }
+    }
+}
+
+using Game.Properties;
+
+namespace Player
+{
+    public class Kinto
+    {
+        public int X { get; private set; }
+        public int Y { get; private set; }
+        public int Width { get; private set; } = 90;
+        public int Height { get; private set; } = 50;
+
+        public const int MAX_HP = 3;
+        public int Hp { get; set; } = MAX_HP;
+
+        // Le nuage est détruit si ses PV tombent à 0
+        public bool IsDestroyed => Hp <= 0;
+
+        // Timer de réapparition en millisecondes (15 secondes = 15 000 ms)
+        private const int RESPAWN_DELAY = 15000;
+        private int _respawnTimer = 0;
+
+        public Kinto(int x, int y)
+        {
+            X = x;
+            Y = y;
+        }
+
+        public void TakeDamage(int damage = 1)
+        {
+            if (IsDestroyed) return;
+
+            Hp -= damage;
+            if (Hp <= 0)
+            {
+                Hp = 0;
+                _respawnTimer = RESPAWN_DELAY; // Enclenche le décompte de 15 secondes
+            }
+        }
+
+        public void Update(int interval)
+        {
+            if (IsDestroyed)
+            {
+                _respawnTimer -= interval;
+                if (_respawnTimer <= 0)
+                {
+                    // Régénération complète du nuage Kinto !
+                    Hp = MAX_HP;
+                    _respawnTimer = 0;
+                }
+            }
+        }
+
+        public void Render(BufferedGraphics drawingSpace)
+        {
+            // S'il est détruit, on ne le dessine pas pendant son temps de recharge
+            if (IsDestroyed) return;
+
+            drawingSpace.Graphics.DrawImage(Resources.FlyingNimbus, X, Y, Width, Height);
+        }
+    }
+}
+
+using Game.Properties;
+using Player.Helpers;
+using System;
+using System.Drawing.Drawing2D;
+
+namespace Player
+{
+    public class Tirs
+    {
+        private const int _SPEED = 10;
+        private double _x;
+        private double _y;
+        private int _bulletsizex;
+        private int _bulletsizey;
+        private double _dirx;
+        private double _diry;
+        private float _angle;
+
+        public double X => _x;
+        public double Y => _y;
+        public int SizeX => _bulletsizex;
+        public int SizeY => _bulletsizey;
+
+        public bool IsOutOfBounds => _y < -50 || _x < -50 || _x > GameSpace.WIDTH + 50 || _y > GameSpace.HEIGHT + 50;
+
+        public Tirs(double startx, double starty, double targetx, double targety, int bulletsizex, int bulletsizey)
+        {
+            _x = startx;
+            _y = starty;
+            _bulletsizex = bulletsizex;
+            _bulletsizey = bulletsizey;
+
+            double deltax = targetx - startx;
+            double deltay = targety - starty;
+
+            double distance = MathHelpers.Distance(startx, starty, targetx, targety);
+
+            if (distance > 0)
+            {
+                _dirx = (deltax / distance) * _SPEED;
+                _diry = (deltay / distance) * _SPEED;
+            }
+            else
+            {
+                _dirx = 0;
+                _diry = -_SPEED;
+            }
+
+            // Calcul de l'angle en degrés
+            _angle = (float)(Math.Atan2(deltay, deltax) * 180.0 / Math.PI) + 90f;
+        }
+
+        public void Update(int interval)
+        {
+            _x += _dirx;
+            _y += _diry;
+        }
+
+        public void Render(BufferedGraphics drawingSpace)
+        {
+            Graphics g = drawingSpace.Graphics;
+            GraphicsState state = g.Save();
+            g.TranslateTransform((float)_x + _bulletsizex / 2f, (float)_y + _bulletsizey / 2f);
+            g.RotateTransform(_angle);
+
+            g.DrawImage(
+                Resources.allyshot,
+                -_bulletsizex / 2f,
+                -_bulletsizey / 2f,
+                _bulletsizex,
+                _bulletsizey
+            );
+            g.Restore(state);
+        }
+    }
+}
+
+namespace Player
+{
+    // Outils pour des calculs mathématiques
+    internal static class MathHelpers
+    {
+        // Distance euclidienne entre les points (x1, y1) et (x2, y2)
+        public static double Distance(double x1, double y1, double x2, double y2)
+        {
+            double dx = x2 - x1;
+            double dy = y2 - y1;
+            return Math.Sqrt(dx * dx + dy * dy);
+        }
+    }
+}

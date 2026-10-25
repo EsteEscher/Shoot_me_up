@@ -1,0 +1,1005 @@
+================================================================================
+PROJET : Shoot_me_up (Jeu 2D Windows Forms en C# / .NET 8)
+================================================================================
+Ce document regroupe l'intégralité du code source du projet pour analyse.
+
+STRUCTURE DU PROJET :
+- Type : Application Windows Forms (.NET 8.0-windows)
+- Ressources graphiques principales (Resources) :
+    * Resources.Goku        -> Goku_idle.png (Personnage joueur)
+    * Resources.saib        -> Enemy.png (Ennemi Saibamen)
+    * Resources.boom        -> boom.png (Sprite explosion)
+    * Resources.allyshot    -> attack.png (Tir du joueur)
+    * Resources.enemyshot   -> attackenemy.png (Tir ennemi)
+    * Resources.FlyingNimbus-> FlyingNimbus.png (Nuage Kinto / Obstacle)
+
+SOMMAIRE :
+  1. Base (1)\Drones\Game.csproj
+  2. Base (1)\Drones\Program.cs
+  3. Base (1)\Drones\Model\Player.cs
+  4. Base (1)\Drones\Model\ennemis.cs
+  5. Base (1)\Drones\Model\Kinto.cs
+  6. Base (1)\Drones\Model\Tirs.cs
+  7. Base (1)\Drones\Model\TirEnnemis.cs
+  8. Base (1)\Drones\View\GameSpace.cs
+  9. Base (1)\Drones\View\GameSpace.Designer.cs
+  10. Base (1)\Drones\Helpers\MathHelpers.cs
+  11. Base (1)\Drones\Helpers\RandomHelpers.cs
+  12. Base (1)\Drones\Helpers\TextHelpers.cs
+================================================================================
+
+// ============================================================================
+// FICHIER : Base (1)\Drones\Game.csproj
+// ============================================================================
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <OutputType>Exe</OutputType>
+    <TargetFramework>net8.0-windows</TargetFramework>
+    <Nullable>enable</Nullable>
+    <UseWindowsForms>true</UseWindowsForms>
+    <ImplicitUsings>enable</ImplicitUsings>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <Compile Update="Properties\Resources.Designer.cs">
+      <DesignTime>True</DesignTime>
+      <AutoGen>True</AutoGen>
+      <DependentUpon>Resources.resx</DependentUpon>
+    </Compile>
+  </ItemGroup>
+
+  <ItemGroup>
+    <EmbeddedResource Update="Properties\Resources.resx">
+      <Generator>ResXFileCodeGenerator</Generator>
+      <LastGenOutput>Resources.Designer.cs</LastGenOutput>
+    </EmbeddedResource>
+  </ItemGroup>
+
+</Project>
+
+
+// ============================================================================
+// FICHIER : Base (1)\Drones\Program.cs
+// ============================================================================
+using Player.Helpers;
+
+namespace Player
+{
+    internal static class Program
+    {
+        /// <summary>
+        ///  The main entry point for the application.
+        /// </summary>
+        [STAThread]
+        static void Main()
+        {
+            // To customize application configuration such as set high DPI settings or default font,
+            // see https://aka.ms/applicationconfiguration.
+            ApplicationConfiguration.Initialize();
+
+            Player p1 = new Player(GameSpace.WIDTH / 2, GameSpace.HEIGHT - 100, "Goku");
+            List<Ennemis> army = new List<Ennemis>();
+            for (int i = 0; i < 10; i++)
+                army.Add(new Ennemis(RandomHelpers.Next(10, GameSpace.WIDTH - 40), 10, p1));
+
+            List<Tirs> bullets = new List<Tirs>();
+
+
+            // D�marrage
+            Application.Run(new GameSpace(p1, army, bullets));
+
+
+        }
+    }
+}
+
+
+// ============================================================================
+// FICHIER : Base (1)\Drones\Model\Player.cs
+// ============================================================================
+using Player.Helpers;
+using Game.Properties;
+
+namespace Player
+{
+    // Cette partie de la classe Drone définit ce qu'est un drone par un modèle numérique
+    public class Player
+    {
+        public int hp;                                // Ces Pv                      
+        public int x;                                 // Position en X depuis la gauche de l'espace aérien
+        public int y;                                 // Position en Y depuis le haut de l'espace aérien
+
+        private Random _alea = new Random();
+
+        // Constructeur
+        public Player(int x, int y, string name)
+        {
+            Random alea = new Random();
+            this.x = x;
+            this.y = y;
+            hp = 3;
+        }
+
+        public void Update(int interval)
+        {
+        }
+
+        // Choisit vitesse
+        // Choisit vitesse et vérifie les obstacles Kinto
+        public void ChangeDirection(int side, List<Kinto> kintos)
+        {
+            int nextX = x;
+            int nextY = y;
+
+            if (side == 1)
+                nextX += 10;
+            if (side == 2)
+                nextY -= 10;
+            if (side == 3)
+                nextX -= 10;
+            if (side == 4)
+                nextY += 10;
+
+            // Barrières invisibles des bords de l'écran
+            if (nextX <= 0)
+                nextX = 0;
+            if (nextX >= GameSpace.WIDTH - 100)
+                nextX = GameSpace.WIDTH - 100;
+            if (nextY <= 0)
+                nextY = 0;
+            if (nextY >= GameSpace.HEIGHT - 100)
+                nextY = GameSpace.HEIGHT - 100;
+
+            // Hitbox théorique de Goku (on affine un peu la boîte pour pas bloquer dans le vide)
+            Rectangle nextPlayerRect = new Rectangle(nextX + 10, nextY + 10, 60, 70);
+
+            // Vérification de collision physique avec les nuages Kinto
+            bool blocked = false;
+            foreach (Kinto kinto in kintos)
+            {
+                if (kinto.IsDestroyed) continue;
+
+                Rectangle kintoRect = new Rectangle(kinto.X, kinto.Y, kinto.Width, kinto.Height);
+                if (nextPlayerRect.IntersectsWith(kintoRect))
+                {
+                    blocked = true;
+                    break;
+                }
+            }
+
+            // On n'applique le déplacement QUE si Goku n'est pas bloqué !
+            if (!blocked)
+            {
+                x = nextX;
+                y = nextY;
+            }
+        }
+
+        /// //////////////////////////////////////////////////////////////////////////////
+        //  
+        //  Ce qui suit appartient à la vue, pas au modèle.
+        //  Il aurait été préférable de séparer la déclaration de la classe Drone en deux,
+        //  Nous regroupons tout ici pour simplifier
+        //  
+        /// //////////////////////////////////////////////////////////////////////////////
+
+        private Pen droneBrush = new Pen(new SolidBrush(Color.Purple), 3);
+
+        // De manière graphique
+        public void Render(BufferedGraphics drawingSpace)
+        {
+            drawingSpace.Graphics.DrawImage(Resources.Goku, x - 30 , y - 10, 125, 100);
+            drawingSpace.Graphics.DrawString($"{this}", TextHelpers.drawFont, TextHelpers.writingBrush, x + 5, y - 25);
+        }
+
+        // De manière textuelle
+        public override string ToString()
+        {
+            return $"Goku ({((int)((double)hp / 1000 * 100)).ToString()}%)";
+        }
+
+
+    }
+}
+
+
+// ============================================================================
+// FICHIER : Base (1)\Drones\Model\ennemis.cs
+// ============================================================================
+using Game.Properties;
+using Player.Helpers;
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Numerics;
+using System.Text;
+using System.Threading.Tasks;
+using static System.Windows.Forms.AxHost;
+
+namespace Player
+{
+    public class Ennemis
+    {
+        public int hp;                                // Ces Pv                      
+        private int _x;                                 // Position en X depuis la gauche de l'espace aérien
+        private int _y;                                 // Position en Y depuis le haut de l'espace aérien
+        public const int HEIGHTSIZE = 62;
+        public const int WIDTHSIZE = 50;
+        private int _targetX;
+        public State state = State.TRAVELLING;
+        private Player _player;
+        private int _explosionTimer = 0;
+        private int _shootCooldown = RandomHelpers.Next(10, 40);
+
+        public enum State { TRAVELLING, SEEKING, STOPPING, EXPLOSING, DEAD }
+        
+
+        public int Y { get => _y; set => _y = value; }
+        public int X { get => _x; set => _x = value; }
+
+        // Constructeur
+        public Ennemis(int x, int y, Player player)
+        {
+            Random alea = new Random();
+            this.X = x;
+            this.Y = y;
+            hp = 3; // Leur Pv
+            this._player = player;
+            state = State.TRAVELLING;
+
+        }
+
+        // Cette méthode calcule le nouvel état dans lequel le drone se trouve après
+        // que 'interval' millisecondes se sont écoulées
+        // On passe kintos en paramètre de Update
+        public void Update(int interval, List<Kinto> kintos)
+        {
+            if (state == State.EXPLOSING || state == State.DEAD)
+            {
+                _explosionTimer++;
+                if (_explosionTimer >= 5)
+                {
+                    state = State.DEAD;
+                }
+                return;
+            }
+
+            int nextX = _x;
+            int nextY = _y;
+
+            if (_y <= GameSpace.HEIGHT - 200)
+            {
+                state = State.TRAVELLING;
+                nextY += 5;
+            }
+            else
+            {
+                state = State.SEEKING;
+                if (_player.x < _x) nextX--;
+                if (_player.x > _x) nextX++;
+                if (_player.y < _y) nextY--;
+                if (_player.y > _y) nextY++;
+            }
+
+            // Hitbox théorique du Saibamen
+            Rectangle nextEnnemiRect = new Rectangle(nextX, nextY, WIDTHSIZE, HEIGHTSIZE);
+
+            bool blocked = false;
+            foreach (Kinto kinto in kintos)
+            {
+                if (kinto.IsDestroyed) continue;
+
+                Rectangle kintoRect = new Rectangle(kinto.X, kinto.Y, kinto.Width, kinto.Height);
+                if (nextEnnemiRect.IntersectsWith(kintoRect))
+                {
+                    blocked = true;
+                    kinto.TakeDamage(1);
+                    break;
+                }
+            }
+
+            // S'il n'est pas bloqué par un nuage, il avance
+            if (!blocked)
+            {
+                _x = nextX;
+                _y = nextY;
+            }
+
+            // Déclenchement de l'explosion sur Goku
+            if (Math.Abs(_x - _player.x) < 20 && Math.Abs(_y - _player.y) < 20)
+            {
+                state = State.EXPLOSING;
+                _player.hp--; // Fait enfin perdre un PV au joueur lors de l'explosion !
+            }
+        }
+
+        // Choisit une nouvelle vitesse aléatoirement
+        public TirEnnemi TryShoot()
+        {
+            // Ne tire pas s'il explose ou s'il est mort
+            if (state == State.EXPLOSING || state == State.DEAD)
+                return null;
+
+            _shootCooldown--;
+            if (_shootCooldown <= 0)
+            {
+                _shootCooldown = RandomHelpers.Next(90, 220); // Cadence aléatoire
+
+                double spawnX = _x + WIDTHSIZE / 2.0;
+                double spawnY = _y + HEIGHTSIZE;
+
+                // On vise le centre de Goku !
+                double targetX = _player.x + 30;
+                double targetY = _player.y + 20;
+
+                return new TirEnnemi(spawnX, spawnY, targetX, targetY);
+            }
+
+            return null;
+        }
+
+        /// //////////////////////////////////////////////////////////////////////////////
+        //  
+        //  Ce qui suit appartient à la vue, pas au modèle.
+        //  Il aurait été préférable de séparer la déclaration de la classe Drone en deux,
+        //  Nous regroupons tout ici pour simplifier
+        //  
+        /// //////////////////////////////////////////////////////////////////////////////
+
+
+        // De manière graphique
+        public void Render(BufferedGraphics drawingSpace)
+        {
+            drawingSpace.Graphics.DrawImage(state != State.EXPLOSING ? Resources.saib : Resources.boom, _x, _y, WIDTHSIZE, HEIGHTSIZE);
+        }
+
+
+    }
+}
+
+
+// ============================================================================
+// FICHIER : Base (1)\Drones\Model\Kinto.cs
+// ============================================================================
+using Game.Properties;
+
+namespace Player
+{
+    public class Kinto
+    {
+        public int X { get; private set; }
+        public int Y { get; private set; }
+        public int Width { get; private set; } = 90;
+        public int Height { get; private set; } = 50;
+
+        public const int MAX_HP = 3;
+        public int Hp { get; set; } = MAX_HP;
+
+        // Le nuage est détruit si ses PV tombent à 0
+        public bool IsDestroyed => Hp <= 0;
+
+        // Timer de réapparition en millisecondes (15 secondes = 15 000 ms)
+        private const int RESPAWN_DELAY = 15000;
+        private int _respawnTimer = 0;
+
+        public Kinto(int x, int y)
+        {
+            X = x;
+            Y = y;
+        }
+
+        public void TakeDamage(int damage = 1)
+        {
+            if (IsDestroyed) return;
+
+            Hp -= damage;
+            if (Hp <= 0)
+            {
+                Hp = 0;
+                _respawnTimer = RESPAWN_DELAY; // Enclenche le décompte de 15 secondes
+            }
+        }
+
+        public void Update(int interval)
+        {
+            if (IsDestroyed)
+            {
+                _respawnTimer -= interval;
+                if (_respawnTimer <= 0)
+                {
+                    // Régénération complète du nuage Kinto !
+                    Hp = MAX_HP;
+                    _respawnTimer = 0;
+                }
+            }
+        }
+
+        public void Render(BufferedGraphics drawingSpace)
+        {
+            // S'il est détruit, on ne le dessine pas pendant son temps de recharge
+            if (IsDestroyed) return;
+
+            drawingSpace.Graphics.DrawImage(Resources.FlyingNimbus, X, Y, Width, Height);
+        }
+    }
+}
+
+
+// ============================================================================
+// FICHIER : Base (1)\Drones\Model\Tirs.cs
+// ============================================================================
+using Game.Properties;
+using Player.Helpers;
+using System;
+using System.Drawing.Drawing2D;
+
+namespace Player
+{
+    public class Tirs
+    {
+        private const int _SPEED = 10;
+        private double _x;
+        private double _y;
+        private int _bulletsizex;
+        private int _bulletsizey;
+        private double _dirx;
+        private double _diry;
+        private float _angle;
+
+        public double X => _x;
+        public double Y => _y;
+        public int SizeX => _bulletsizex;
+        public int SizeY => _bulletsizey;
+
+        public bool IsOutOfBounds => _y < -50 || _x < -50 || _x > GameSpace.WIDTH + 50 || _y > GameSpace.HEIGHT + 50;
+
+        public Tirs(double startx, double starty, double targetx, double targety, int bulletsizex, int bulletsizey)
+        {
+            _x = startx;
+            _y = starty;
+            _bulletsizex = bulletsizex;
+            _bulletsizey = bulletsizey;
+
+            double deltax = targetx - startx;
+            double deltay = targety - starty;
+
+            double distance = MathHelpers.Distance(startx, starty, targetx, targety);
+
+            if (distance > 0)
+            {
+                _dirx = (deltax / distance) * _SPEED;
+                _diry = (deltay / distance) * _SPEED;
+            }
+            else
+            {
+                _dirx = 0;
+                _diry = -_SPEED;
+            }
+
+            // Calcul de l'angle en degrés
+            _angle = (float)(Math.Atan2(deltay, deltax) * 180.0 / Math.PI) + 90f;
+        }
+
+        public void Update(int interval)
+        {
+            _x += _dirx;
+            _y += _diry;
+        }
+
+        public void Render(BufferedGraphics drawingSpace)
+        {
+            Graphics g = drawingSpace.Graphics;
+            GraphicsState state = g.Save();
+            g.TranslateTransform((float)_x + _bulletsizex / 2f, (float)_y + _bulletsizey / 2f);
+            g.RotateTransform(_angle);
+
+            g.DrawImage(
+                Resources.allyshot,
+                -_bulletsizex / 2f,
+                -_bulletsizey / 2f,
+                _bulletsizex,
+                _bulletsizey
+            );
+            g.Restore(state);
+        }
+    }
+}
+
+
+// ============================================================================
+// FICHIER : Base (1)\Drones\Model\TirEnnemis.cs
+// ============================================================================
+using Game.Properties;
+using Player.Helpers;
+using System;
+using System.Drawing.Drawing2D;
+
+namespace Player
+{
+    public class TirEnnemi
+    {
+        private const double SPEED = 7.0; // Vitesse du projectile ennemi
+        private double _x;
+        private double _y;
+        private double _dirx;
+        private double _diry;
+        private float _angle;
+
+        public int SizeX { get; private set; } = 25;
+        public int SizeY { get; private set; } = 25;
+
+        public double X => _x;
+        public double Y => _y;
+
+        // Sortie de l'écran par n'importe quel côté
+        public bool IsOutOfBounds => _x < -50 || _x > GameSpace.WIDTH + 50 || _y < -50 || _y > GameSpace.HEIGHT + 50;
+
+        public TirEnnemi(double startX, double startY, double targetX, double targetY)
+        {
+            _x = startX;
+            _y = startY;
+
+            double deltaX = targetX - startX;
+            double deltaY = targetY - startY;
+
+            double distance = MathHelpers.Distance(startX, startY, targetX, targetY);
+
+            if (distance > 0)
+            {
+                _dirx = (deltaX / distance) * SPEED;
+                _diry = (deltaY / distance) * SPEED;
+            }
+            else
+            {
+                _dirx = 0;
+                _diry = SPEED; // Vers le bas par défaut
+            }
+
+            // Orientation du tir vers sa cible (ajuste +90f selon ton sprite)
+            _angle = (float)(Math.Atan2(deltaY, deltaX) * 180.0 / Math.PI) + 90f;
+        }
+
+        public void Update(int interval)
+        {
+            _x += _dirx;
+            _y += _diry;
+        }
+
+        public void Render(BufferedGraphics drawingSpace)
+        {
+            Graphics g = drawingSpace.Graphics;
+            GraphicsState state = g.Save();
+
+            g.TranslateTransform((float)_x + SizeX / 2f, (float)_y + SizeY / 2f);
+            g.RotateTransform(_angle);
+
+            // Remplace Resources.allyshot par le sprite de tir des Saibamens si tu en as un !
+            g.DrawImage(Resources.allyshot, -SizeX / 2f, -SizeY / 2f, SizeX, SizeY);
+
+            g.Restore(state);
+        }
+    }
+}
+
+
+// ============================================================================
+// FICHIER : Base (1)\Drones\View\GameSpace.cs
+// ============================================================================
+using Player.Helpers;
+using System.Runtime.InteropServices;
+
+namespace Player
+{
+    // La classe AirSpace repr�sente le territoire au dessus duquel les drones peuvent voler
+    // Il s'agit d'un formulaire (une fen�tre) qui montre une vue 2D depuis en dessus
+    // Il n'y a donc pas de notion d'altitude qui intervient
+
+    public partial class GameSpace : Form
+    {
+        public static readonly int WIDTH = 1200;        // Dimensions of the airspace
+        public static readonly int HEIGHT = 600;
+        private int _waveNumber = 1;
+        private int _waveCooldown = 0; // Petit d�lai entre deux vagues pour laisser souffler le joueur
+
+        // La flotte est l'ensemble des drones qui �voluent dans notre espace a�rien
+        private Player _player;
+        private List<Ennemis> _ennemis = new List<Ennemis>();
+        private List<Tirs> _bullets = new List<Tirs>();
+        private List<Kinto> _kintos = new List<Kinto>();
+        private List<TirEnnemi> _enemyBullets = new List<TirEnnemi>();
+
+        BufferedGraphicsContext currentContext;
+        BufferedGraphics gamespace;
+
+        // Initialisation de l'espace a�rien avec un certain nombre de drones
+        public GameSpace(Player player, List<Ennemis> ennemis, List<Tirs> bullets)
+        {
+            InitializeComponent();
+            ClientSize = new Size(WIDTH, HEIGHT);
+
+            // Gets a reference to the current BufferedGraphicsContext
+            currentContext = BufferedGraphicsManager.Current;
+            // Creates a BufferedGraphics instance associated with this form, and with
+            // dimensions the same size as the drawing surface of the form.
+            gamespace = currentContext.Allocate(this.CreateGraphics(), this.DisplayRectangle);
+            this._player = player;
+            this._ennemis = ennemis;
+            this._bullets = bullets;
+
+            int kintoY = HEIGHT - 200; // Position en hauteur au-dessus de Goku
+            int spacing = WIDTH / 6;   // R�partition �quilibr�e sur la largeur
+
+            for (int i = 1; i <= 5; i++)
+            {
+                _kintos.Add(new Kinto((i * spacing) - 45, kintoY));
+            }
+        }
+
+        // Affichage de la situation actuelle
+        private void Render()
+        {
+            gamespace.Graphics.Clear(Color.AliceBlue);
+
+            _player.Render(gamespace);
+            foreach (Tirs tir in _bullets)
+            {
+                tir.Render(gamespace);
+            }
+
+            foreach (Ennemis ennemis in _ennemis)
+            {
+                ennemis.Render(gamespace);
+            }
+
+            foreach (Kinto kinto in _kintos)
+            {
+                kinto.Render(gamespace);
+            }
+
+            foreach (TirEnnemi enemyTir in _enemyBullets)
+            {
+                enemyTir.Render(gamespace);
+            }
+
+            // Affichage de la vague actuelle
+            gamespace.Graphics.DrawString(
+                $"Vague : {_waveNumber}",
+                TextHelpers.drawFont,
+                TextHelpers.writingBrush,
+                20,
+                20
+            );
+
+            gamespace.Render();
+        }
+
+        // Calcul du nouvel �tat apr�s que 'interval' millisecondes se sont �coul�es
+        private void Update(int interval)
+        {
+            _player.Update(interval);
+
+            for (int i = _bullets.Count - 1; i >= 0; i--)
+            {
+                Tirs tir = _bullets[i];
+                tir.Update(interval);
+
+                if (tir.IsOutOfBounds)
+                {
+                    _bullets.RemoveAt(i);
+                    continue;
+                }
+
+                bool hit = false;
+                Rectangle bulletRect = new Rectangle((int)tir.X, (int)tir.Y, tir.SizeX, tir.SizeY);
+
+                // 1. V�rification des collisions avec les Kintos
+                for (int k = _kintos.Count - 1; k >= 0; k--)
+                {
+                    Kinto kinto = _kintos[k];
+                    Rectangle kintoRect = new Rectangle(kinto.X, kinto.Y, kinto.Width, kinto.Height);
+
+                    if (bulletRect.IntersectsWith(kintoRect))
+                    {
+                        kinto.TakeDamage(1);
+                        hit = true;
+                        break;
+                    }
+                }
+
+                // 2. V�rification des collisions avec les ennemis (seulement si le tir n'a pas d�j� touch� un Kinto)
+                if (!hit)
+                {
+                    for (int j = _ennemis.Count - 1; j >= 0; j--)
+                    {
+                        Ennemis ennemi = _ennemis[j];
+
+                        if (ennemi.state == Ennemis.State.EXPLOSING || ennemi.state == Ennemis.State.DEAD)
+                            continue;
+
+                        Rectangle ennemiRect = new Rectangle(ennemi.X - 5, ennemi.Y - 5, Ennemis.WIDTHSIZE + 10, Ennemis.HEIGHTSIZE + 10);
+
+                        if (bulletRect.IntersectsWith(ennemiRect))
+                        {
+                            ennemi.hp--;
+
+                            if (ennemi.hp <= 0)
+                            {
+                                ennemi.state = Ennemis.State.EXPLOSING;
+                            }
+
+                            hit = true;
+                            break;
+                        }
+                    }
+                }
+
+                if (hit)
+                {
+                    _bullets.RemoveAt(i);
+                }
+            }
+
+            for (int i = _ennemis.Count - 1; i >= 0; i--)
+            {
+                _ennemis[i].Update(interval, _kintos);
+
+                if (_ennemis[i].state == global::Player.Ennemis.State.DEAD)
+                {
+                    _ennemis.RemoveAt(i);
+                }
+            }
+
+            // 1. D�clenchement des tirs ennemis
+            foreach (Ennemis ennemi in _ennemis)
+            {
+                TirEnnemi nouveauTir = ennemi.TryShoot();
+                if (nouveauTir != null)
+                {
+                    _enemyBullets.Add(nouveauTir);
+                }
+            }
+
+            // 2. Mise � jour et collisions des tirs ennemis
+            for (int i = _enemyBullets.Count - 1; i >= 0; i--)
+            {
+                TirEnnemi tir = _enemyBullets[i];
+                tir.Update(interval);
+
+                if (tir.IsOutOfBounds)
+                {
+                    _enemyBullets.RemoveAt(i);
+                    continue;
+                }
+
+                bool hit = false;
+                Rectangle bulletRect = new Rectangle((int)tir.X, (int)tir.Y, tir.SizeX, tir.SizeY);
+
+                // Collision tir ennemi vs Kinto (les nuages bloquent aussi leurs tirs !)
+                for (int k = _kintos.Count - 1; k >= 0; k--)
+                {
+                    Kinto kinto = _kintos[k];
+                    Rectangle kintoRect = new Rectangle(kinto.X, kinto.Y, kinto.Width, kinto.Height);
+
+                    if (bulletRect.IntersectsWith(kintoRect))
+                    {
+                        kinto.TakeDamage(1);
+                        hit = true;
+                        break;
+                    }
+                }
+
+                // Collision tir ennemi vs Goku (Player)
+                if (!hit)
+                {
+                    Rectangle playerRect = new Rectangle(_player.x, _player.y, 80, 80); // Ajuste selon la taille de Goku
+                    if (bulletRect.IntersectsWith(playerRect))
+                    {
+                        _player.hp--;
+                        hit = true;
+                    }
+                }
+
+                if (hit)
+                {
+                    _enemyBullets.RemoveAt(i);
+                }
+            }
+
+            // V�rification de fin de vague
+            if (_ennemis.Count == 0)
+            {
+                _waveCooldown++;
+
+                // On attend environ 60 frames (1 � 2 secondes) avant de faire pop la vague suivante
+                if (_waveCooldown >= 60)
+                {
+                    _waveNumber++;
+                    SpawnWave();
+                    _waveCooldown = 0;
+                }
+            }
+
+            // Mise � jour de la r�g�n�ration des Kintos
+            foreach (Kinto kinto in _kintos)
+            {
+                kinto.Update(interval);
+            }
+        }
+
+        private void SpawnWave()
+        {
+            // � chaque vague, on augmente le nombre d'ennemis (ex: 5 + 2 par vague)
+            int enemiesCount = 4 + (_waveNumber * 2);
+
+            for (int i = 0; i < enemiesCount; i++)
+            {
+                // On r�partit les X de fa�on al�atoire en �vitant les bords
+                int spawnX = RandomHelpers.Next(30, WIDTH - Ennemis.WIDTHSIZE - 30);
+                // On d�cale l�g�rement les Y au-dessus de l'�cran pour qu'ils n'arrivent pas tous empil�s
+                int spawnY = -RandomHelpers.Next(20, 150);
+
+                Ennemis nouvelEnnemi = new Ennemis(spawnX, spawnY, _player);
+                _ennemis.Add(nouvelEnnemi);
+            }
+        }
+
+
+        // M�thode appel�e � chaque frame
+        private void NewFrame(object sender, EventArgs e)
+        {
+            this.Update(ticker.Interval);
+            this.Render();
+        }
+
+        //Mouvement
+        private void AirSpace_KeyDown(object sender, KeyEventArgs e)
+{
+    switch (e.KeyCode)
+    {
+        case Keys.Right:
+        case Keys.D:
+            _player.ChangeDirection(1, _kintos);
+            break;
+
+        case Keys.Up:
+        case Keys.W:
+            _player.ChangeDirection(2, _kintos);
+            break;
+
+        case Keys.Left:
+        case Keys.A:
+            _player.ChangeDirection(3, _kintos);
+            break;
+
+        case Keys.Down:
+        case Keys.S:
+            _player.ChangeDirection(4, _kintos);
+            break;
+
+        case Keys.Space:
+            Point mousePos = this.PointToClient(Cursor.Position);
+            int startx = _player.x + 15;
+            int starty = _player.y;
+
+            _bullets.Add(new Tirs(startx, starty, mousePos.X, mousePos.Y, 40, 40));
+            break;
+    }
+}
+    }
+}
+
+
+// ============================================================================
+// FICHIER : Base (1)\Drones\View\GameSpace.Designer.cs
+// ============================================================================
+namespace Player
+{
+    partial class GameSpace
+    {
+        /// <summary>
+        ///  Required designer variable.
+        /// </summary>
+        private System.ComponentModel.IContainer components = null;
+
+        /// <summary>
+        ///  Clean up any resources being used.
+        /// </summary>
+        /// <param name="disposing">true if managed resources should be disposed; otherwise, false.</param>
+        protected override void Dispose(bool disposing)
+        {
+            if (disposing && (components != null))
+            {
+                components.Dispose();
+            }
+            base.Dispose(disposing);
+        }
+
+        #region Windows Form Designer generated code
+
+        /// <summary>
+        ///  Required method for Designer support - do not modify
+        ///  the contents of this method with the code editor.
+        /// </summary>
+        private void InitializeComponent()
+        {
+            components = new System.ComponentModel.Container();
+            ticker = new System.Windows.Forms.Timer(components);
+            SuspendLayout();
+            // 
+            // ticker
+            // 
+            ticker.Enabled = true;
+            ticker.Tick += NewFrame;
+            // 
+            // AirSpace
+            // 
+            AutoScaleDimensions = new SizeF(7F, 15F);
+            AutoScaleMode = AutoScaleMode.Font;
+            ClientSize = new Size(284, 261);
+            Name = "AirSpace";
+            Text = "AirSpace";
+            KeyDown += AirSpace_KeyDown;
+            ResumeLayout(false);
+
+        }
+
+        #endregion
+
+        private System.Windows.Forms.Timer ticker;
+    }
+}
+
+
+// ============================================================================
+// FICHIER : Base (1)\Drones\Helpers\MathHelpers.cs
+// ============================================================================
+namespace Player
+{
+    // Outils pour des calculs mathématiques
+    internal static class MathHelpers
+    {
+        // Distance euclidienne entre les points (x1, y1) et (x2, y2)
+        public static double Distance(double x1, double y1, double x2, double y2)
+        {
+            double dx = x2 - x1;
+            double dy = y2 - y1;
+            return Math.Sqrt(dx * dx + dy * dy);
+        }
+    }
+}
+
+
+// ============================================================================
+// FICHIER : Base (1)\Drones\Helpers\RandomHelpers.cs
+// ============================================================================
+namespace Player.Helpers
+{
+    // Outils pour la génération de valeurs aléatoires
+    internal static class RandomHelpers
+    {
+        private static readonly Random alea = new Random();
+
+        // Valeur aléatoire entre 0 (inclus) et max (exclu)
+        public static int Next(int max) => alea.Next(max);
+
+        // Valeur aléatoire entre min (inclus) et max (exclu)
+        public static int Next(int min, int max) => alea.Next(min, max);
+    }
+}
+
+
+// ============================================================================
+// FICHIER : Base (1)\Drones\Helpers\TextHelpers.cs
+// ============================================================================
+namespace Player.Helpers
+{
+    // Outils pour écrire du texte dans un environnement graphique
+    internal static class TextHelpers
+    {
+        public static Font drawFont = new Font("Arial", 10);
+        public static SolidBrush writingBrush = new SolidBrush(Color.Black);
+    }
+}
+
+

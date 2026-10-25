@@ -1,78 +1,84 @@
 ﻿using Player.Helpers;
 using Game.Properties;
+using System.Drawing;
+using System.Collections.Generic;
 
 namespace Player
 {
-    // Cette partie de la classe Drone définit ce qu'est un drone par un modèle numérique
     public class Player
     {
-        public int hp;                                // Ces Pv                      
-        public int x;                                 // Position en X depuis la gauche de l'espace aérien
-        public int y;                                 // Position en Y depuis le haut de l'espace aérien
+        public int hp;
+        public int x;
+        public int y;
 
-        private Random _alea = new Random();
-
-        // Constructeur
-        public Player(int x, int y, string name)
+        public Player(int startX, int startY, string name)
         {
-            Random alea = new Random();
-            this.x = x;
-            this.y = y;
-            hp = 3; // La charge initiale de la batterie est choisie aléatoirement
+            x = startX;
+            y = startY;
+            hp = 3;
         }
 
-        // Cette méthode calcule le nouvel état dans lequel le drone se trouve après
-        // que 'interval' millisecondes se sont écoulées
         public void Update(int interval)
         {
         }
 
-        // Choisit vitesse
-        public void ChangeDirection(int side)
+        public void ChangeDirection(int side, List<Kinto> kintos)
         {
-            if (side == 1)
-                x += 10;
-            if (side == 2)
-                y -= 10;
-            if (side == 3)
-                x -= 10;
-            if (side == 4)
-                y += 10;
+            int nextX = x;
+            int nextY = y;
 
-            //Barriere invisible
-            if (x <= 0)
-                x = 0;
-            if (x >= GameSpace.WIDTH - 100)
-                x = GameSpace.WIDTH - 100;
-            if (y <= 0)
-                y = 0;
-            if (y >= GameSpace.HEIGHT - 100)
-                y = GameSpace.HEIGHT - 100;
+            if (side == 1)
+                nextX += 10;
+            if (side == 2)
+                nextY -= 10;
+            if (side == 3)
+                nextX -= 10;
+            if (side == 4)
+                nextY += 10;
+
+            // Barrières horizontales
+            if (nextX <= 0)
+                nextX = 0;
+            if (nextX >= GameSpace.WIDTH - 100)
+                nextX = GameSpace.WIDTH - 100;
+
+            // Barrières verticales : Goku est confiné STRICTEMENT dans la zone du bas !
+            if (nextY <= GameSpace.HEIGHT - 200)
+                nextY = GameSpace.HEIGHT - 200;
+            if (nextY >= GameSpace.HEIGHT - 100)
+                nextY = GameSpace.HEIGHT - 100;
+
+            Rectangle nextPlayerRect = new Rectangle(nextX + 10, nextY + 10, 60, 70);
+
+            bool blocked = false;
+            foreach (Kinto kinto in kintos)
+            {
+                if (kinto.IsDestroyed) continue;
+
+                Rectangle kintoRect = new Rectangle(kinto.X, kinto.Y, kinto.Width, kinto.Height);
+                if (nextPlayerRect.IntersectsWith(kintoRect))
+                {
+                    blocked = true;
+                    break;
+                }
+            }
+
+            if (!blocked)
+            {
+                x = nextX;
+                y = nextY;
+            }
         }
 
-        /// //////////////////////////////////////////////////////////////////////////////
-        //  
-        //  Ce qui suit appartient à la vue, pas au modèle.
-        //  Il aurait été préférable de séparer la déclaration de la classe Drone en deux,
-        //  Nous regroupons tout ici pour simplifier
-        //  
-        /// //////////////////////////////////////////////////////////////////////////////
-
-        private Pen droneBrush = new Pen(new SolidBrush(Color.Purple), 3);
-
-        // De manière graphique
         public void Render(BufferedGraphics drawingSpace)
         {
-            drawingSpace.Graphics.DrawImage(Resources.Goku, x - 30 , y - 10, 125, 100);
+            drawingSpace.Graphics.DrawImage(Resources.Goku, x - 30, y - 10, 125, 100);
             drawingSpace.Graphics.DrawString($"{this}", TextHelpers.drawFont, TextHelpers.writingBrush, x + 5, y - 25);
         }
 
-        // De manière textuelle
         public override string ToString()
         {
-            return $"Goku ({((int)((double)hp / 1000 * 100)).ToString()}%)";
+            return $"Goku (PV: {hp})";
         }
-
-
     }
 }

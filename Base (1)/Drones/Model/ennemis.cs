@@ -2,117 +2,122 @@
 using Player.Helpers;
 using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Numerics;
-using System.Text;
-using System.Threading.Tasks;
-using static System.Windows.Forms.AxHost;
+using System.Drawing;
 
 namespace Player
 {
-    // Cette partie de la classe Drone définit ce qu'est un drone par un modèle numérique
     public class Ennemis
     {
-        public int hp;                                // Ces Pv                      
-        private int _x;                                 // Position en X depuis la gauche de l'espace aérien
-        private int _y;                                 // Position en Y depuis le haut de l'espace aérien
+        public const int POINTS_VALUE = 100;
         public const int HEIGHTSIZE = 62;
         public const int WIDTHSIZE = 50;
-        private int _targetX;
+
+        public int hp;
+        private int _x;
+        private int _y;
         public State state = State.TRAVELLING;
         private Player _player;
         private int _explosionTimer = 0;
+        private int _shootCooldown = RandomHelpers.Next(10, 40);
 
         public enum State { TRAVELLING, SEEKING, STOPPING, EXPLOSING, DEAD }
-
 
         public int Y { get => _y; set => _y = value; }
         public int X { get => _x; set => _x = value; }
 
-        // Constructeur
         public Ennemis(int x, int y, Player player)
         {
-            Random alea = new Random();
             this.X = x;
             this.Y = y;
-            hp = 3; // Leur Pv
+            hp = 3;
             this._player = player;
             state = State.TRAVELLING;
-
         }
 
-        // Cette méthode calcule le nouvel état dans lequel le drone se trouve après
-        // que 'interval' millisecondes se sont écoulées
-        public void Update(int interval)
+        public void Update(int interval, List<Kinto> kintos)
         {
-            if (_y <= GameSpace.HEIGHT - 200 && state != State.EXPLOSING)
+            if (state == State.EXPLOSING || state == State.DEAD)
+            {
+                _explosionTimer++;
+                if (_explosionTimer >= 5)
+                {
+                    state = State.DEAD;
+                }
+                return;
+            }
+
+            int nextX = _x;
+            int nextY = _y;
+
+            if (_y <= GameSpace.HEIGHT - 200)
             {
                 state = State.TRAVELLING;
-                _y += 5;
-            
+                nextY += 5;
             }
-
-            // Mouvement dans l'espace du joueur les ennemis se lancent dans la traque du joueur
-            if (_y >= GameSpace.HEIGHT - 200 && state != State.EXPLOSING)
+            else
             {
                 state = State.SEEKING;
-                if (_player.x < _x)
+                if (_player.x < _x) nextX--;
+                if (_player.x > _x) nextX++;
+                if (_player.y < _y) nextY--;
+                if (_player.y > _y) nextY++;
+            }
+
+            Rectangle nextEnnemiRect = new Rectangle(nextX, nextY, WIDTHSIZE, HEIGHTSIZE);
+
+            bool blocked = false;
+            foreach (Kinto kinto in kintos)
+            {
+                if (kinto.IsDestroyed) continue;
+
+                Rectangle kintoRect = new Rectangle(kinto.X, kinto.Y, kinto.Width, kinto.Height);
+                if (nextEnnemiRect.IntersectsWith(kintoRect))
                 {
-                    _x--;
-                }
-                if (_player.y < _y)
-                {
-                    _y--;
-                }
-                if (_player.x > _x)
-                {
-                    _x++;
-                }
-                if (_player.y > _y)
-                {
-                    _y++;
+                    blocked = true;
+                    kinto.TakeDamage(1);
+                    break;
                 }
             }
-            if (_x == _player.x && _y == _player.y)
+
+            if (!blocked)
             {
-                state = State.STOPPING;
+                _x = nextX;
+                _y = nextY;
+            }
+
+            if (Math.Abs(_x - _player.x) < 20 && Math.Abs(_y - _player.y) < 20)
+            {
                 state = State.EXPLOSING;
+                _player.hp--;
             }
-            if (state == State.EXPLOSING)
-            {
-                if (state == State.EXPLOSING)
-                {
-                    _explosionTimer++;
-                    if (_explosionTimer >= 5) // Ajuste le nombre de frames visibles
-                    {
-                        state = State.DEAD;
-                    }
-                    return;
-                }
-            }
-
         }
 
-        // Choisit une nouvelle vitesse aléatoirement
-        public void ChangeDirection(int side)
+        public TirEnnemi? TryShoot()
         {
+            // Ne tire pas s'il explose, s'il est mort, OU s'il a atteint la zone basse (SEEKING) !
+            if (state == State.EXPLOSING || state == State.DEAD || _y >= GameSpace.HEIGHT - 200)
+                return null;
+
+            _shootCooldown--;
+            if (_shootCooldown <= 0)
+            {
+                _shootCooldown = RandomHelpers.Next(90, 220);
+
+                double spawnX = _x + WIDTHSIZE / 2.0;
+                double spawnY = _y + HEIGHTSIZE;
+
+                double targetX = _player.x + 30;
+                double targetY = _player.y + 20;
+
+                return new TirEnnemi(spawnX, spawnY, targetX, targetY);
+            }
+
+            return null;
         }
 
-        /// //////////////////////////////////////////////////////////////////////////////
-        //  
-        //  Ce qui suit appartient à la vue, pas au modèle.
-        //  Il aurait été préférable de séparer la déclaration de la classe Drone en deux,
-        //  Nous regroupons tout ici pour simplifier
-        //  
-        /// //////////////////////////////////////////////////////////////////////////////
-
-
-        // De manière graphique
         public void Render(BufferedGraphics drawingSpace)
         {
             drawingSpace.Graphics.DrawImage(state != State.EXPLOSING ? Resources.saib : Resources.boom, _x, _y, WIDTHSIZE, HEIGHTSIZE);
         }
-
-
     }
 }
