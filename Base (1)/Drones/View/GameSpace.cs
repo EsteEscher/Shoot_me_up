@@ -1,3 +1,4 @@
+using Game.Properties;
 using Player.Helpers;
 
 namespace Player
@@ -72,7 +73,7 @@ namespace Player
 
         private void Render()
         {
-            gamespace.Graphics.Clear(Color.AliceBlue);
+            gamespace.Graphics.DrawImage(Resources.BackgroundDBZ, 0, 0, WIDTH, HEIGHT);
 
             _player.Render(gamespace);
 
@@ -292,7 +293,7 @@ namespace Player
 
         private void SpawnWave()
         {
-            int enemiesCount = 4 + (_waveNumber * 2);
+            int enemiesCount = 10 + (_waveNumber * 2);
 
             for (int i = 0; i < enemiesCount; i++)
             {

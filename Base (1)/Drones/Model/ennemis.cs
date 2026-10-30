@@ -6,8 +6,8 @@ namespace Player
     public class Ennemis
     {
         public const int POINTS_VALUE = 100;
-        public const int HEIGHTSIZE = 62;
-        public const int WIDTHSIZE = 50;
+        public const int HEIGHTSIZE = 70;
+        public const int WIDTHSIZE = 60;
 
         public int hp;
         private int _x;

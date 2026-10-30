@@ -6,8 +6,8 @@ namespace Player
     {
         public int X { get; private set; }
         public int Y { get; private set; }
-        public int Width { get; private set; } = 90;
-        public int Height { get; private set; } = 50;
+        public int Width { get; private set; } = 100;
+        public int Height { get; private set; } = 60;
 
         public const int MAX_HP = 3;
         public int Hp { get; set; } = MAX_HP;

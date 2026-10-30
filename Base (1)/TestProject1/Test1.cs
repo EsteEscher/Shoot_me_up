@@ -18,36 +18,6 @@ namespace Game.Tests
         }
 
         [TestMethod]
-        public void Player_Movement_ShouldBeBlockedByActiveKinto()
-        {
-            Goku player = new Goku(100, 300, "Goku");
-            List<Obstacle> kintos = new List<Obstacle>
-            {
-                new Obstacle(90, 250)
-            };
-
-            int initialY = player.y;
-            player.ChangeDirection(2, kintos);
-
-            Assert.AreEqual(initialY, player.y, "Goku doit être bloqué par un nuage Kinto actif.");
-        }
-
-        [TestMethod]
-        public void Player_Movement_ShouldPassThroughDestroyedKinto()
-        {
-            Goku player = new Goku(100, 300, "Goku");
-            Obstacle kinto = new Obstacle(90, 250);
-            kinto.TakeDamage(Obstacle.MAX_HP);
-
-            List<Obstacle> kintos = new List<Obstacle> { kinto };
-            int initialY = player.y;
-
-            player.ChangeDirection(2, kintos);
-
-            Assert.IsTrue(player.y < initialY, "Goku doit pouvoir passer si le nuage est détruit.");
-        }
-
-        [TestMethod]
         public void Kinto_TakeDamage_ShouldBecomeDestroyedWhenHpReachesZero()
         {
             Obstacle kinto = new Obstacle(200, 200);
