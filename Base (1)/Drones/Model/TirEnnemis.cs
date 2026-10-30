@@ -1,6 +1,4 @@
 ﻿using Game.Properties;
-using Player.Helpers;
-using System;
 using System.Drawing.Drawing2D;
 
 namespace Player
@@ -61,10 +59,7 @@ namespace Player
 
             g.TranslateTransform((float)_x + SizeX / 2f, (float)_y + SizeY / 2f);
             g.RotateTransform(_angle);
-
-            // Remplace Resources.allyshot par le sprite de tir des Saibamens si tu en as un !
-            g.DrawImage(Resources.allyshot, -SizeX / 2f, -SizeY / 2f, SizeX, SizeY);
-
+            g.DrawImage(Resources.enemyshot, -SizeX / 2f, -SizeY / 2f, SizeX, SizeY);
             g.Restore(state);
         }
     }

@@ -1,8 +1,5 @@
 ﻿using Game.Properties;
 using Player.Helpers;
-using System;
-using System.Collections.Generic;
-using System.Drawing;
 
 namespace Player
 {

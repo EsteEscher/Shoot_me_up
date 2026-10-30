@@ -1,6 +1,4 @@
 ﻿using Game.Properties;
-using Player.Helpers;
-using System;
 using System.Drawing.Drawing2D;
 
 namespace Player

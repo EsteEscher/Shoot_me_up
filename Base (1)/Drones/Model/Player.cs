@@ -1,7 +1,5 @@
 ﻿using Player.Helpers;
 using Game.Properties;
-using System.Drawing;
-using System.Collections.Generic;
 
 namespace Player
 {
@@ -41,8 +39,7 @@ namespace Player
                 nextX = 0;
             if (nextX >= GameSpace.WIDTH - 100)
                 nextX = GameSpace.WIDTH - 100;
-
-            // Barrières verticales : Goku est confiné STRICTEMENT dans la zone du bas !
+            // Barrières verticales
             if (nextY <= GameSpace.HEIGHT - 200)
                 nextY = GameSpace.HEIGHT - 200;
             if (nextY >= GameSpace.HEIGHT - 100)

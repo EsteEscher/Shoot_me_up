@@ -15,7 +15,7 @@ namespace Player
         // Le nuage est détruit si ses PV tombent à 0
         public bool IsDestroyed => Hp <= 0;
 
-        // Timer de réapparition en millisecondes (15 secondes = 15 000 ms)
+        // Timer de réapparition
         private const int RESPAWN_DELAY = 15000;
         private int _respawnTimer = 0;
 
@@ -33,7 +33,7 @@ namespace Player
             if (Hp <= 0)
             {
                 Hp = 0;
-                _respawnTimer = RESPAWN_DELAY; // Enclenche le décompte de 15 secondes
+                _respawnTimer = RESPAWN_DELAY;
             }
         }
 
@@ -44,7 +44,7 @@ namespace Player
                 _respawnTimer -= interval;
                 if (_respawnTimer <= 0)
                 {
-                    // Régénération complète du nuage Kinto !
+                    // Régénération complete de la barriere
                     Hp = MAX_HP;
                     _respawnTimer = 0;
                 }
@@ -53,7 +53,6 @@ namespace Player
 
         public void Render(BufferedGraphics drawingSpace)
         {
-            // S'il est détruit, on ne le dessine pas pendant son temps de recharge
             if (IsDestroyed) return;
 
             drawingSpace.Graphics.DrawImage(Resources.FlyingNimbus, X, Y, Width, Height);
