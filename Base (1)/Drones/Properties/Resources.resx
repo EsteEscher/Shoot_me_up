@@ -121,9 +121,9 @@
   <data name="Goku" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Resources\Goku_idle.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
-    <data name="saib" type="System.Resources.ResXFileRef, System.Windows.Forms">
-      <value>..\Resources\Enemy.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
-    </data>
+  <data name="saib" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\Enemy.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
   <data name="boom" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Resources\boom.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
@@ -132,5 +132,11 @@
   </data>
   <data name="allyshot" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Resources\attack.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="FlyingNimbus" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\FlyingNimbus.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="BackgroundDBZ" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\BackgroundDBZ.jpg;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
 </root>

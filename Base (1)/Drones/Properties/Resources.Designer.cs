@@ -73,6 +73,16 @@ namespace Game.Properties {
         /// <summary>
         ///   Recherche une ressource localisée de type System.Drawing.Bitmap.
         /// </summary>
+        internal static System.Drawing.Bitmap BackgroundDBZ {
+            get {
+                object obj = ResourceManager.GetObject("BackgroundDBZ", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Recherche une ressource localisée de type System.Drawing.Bitmap.
+        /// </summary>
         internal static System.Drawing.Bitmap boom {
             get {
                 object obj = ResourceManager.GetObject("boom", resourceCulture);
@@ -86,6 +96,16 @@ namespace Game.Properties {
         internal static System.Drawing.Bitmap enemyshot {
             get {
                 object obj = ResourceManager.GetObject("enemyshot", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Recherche une ressource localisée de type System.Drawing.Bitmap.
+        /// </summary>
+        internal static System.Drawing.Bitmap FlyingNimbus {
+            get {
+                object obj = ResourceManager.GetObject("FlyingNimbus", resourceCulture);
                 return ((System.Drawing.Bitmap)(obj));
             }
         }
