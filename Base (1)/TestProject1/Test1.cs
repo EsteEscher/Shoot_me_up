@@ -1,9 +1,9 @@
 ﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
 using System.Collections.Generic;
-using Goku = Player.Player;
-using Saibamen = Player.Ennemis;
-using Obstacle = Player.Kinto;
-using Calc = Player.MathHelpers;
+using Goku = Shoot_me_up.Player;
+using Saibamen = Shoot_me_up.Ennemis;
+using Obstacle = Shoot_me_up.Kinto;
+using Calc = Shoot_me_up.MathHelpers;
 
 namespace Game.Tests
 {

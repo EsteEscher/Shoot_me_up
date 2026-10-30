@@ -360,6 +360,32 @@
       "description": "",
       "duration": 5,
       "status": "DONE"
+    },
+    {
+      "id": "31121211-15ef-4e48-beff-a447357a69c9",
+      "type": "commitpatch",
+      "sha": "5bf27573a472784a4e12b5e86100e7542b5be18c",
+      "url": "https://github.com/EsteEscher/Shoot_me_up/commit/5bf27573a472784a4e12b5e86100e7542b5be18c",
+      "author": "EsteEscher",
+      "patch": true,
+      "date": "2026-10-30T09:33:00.000Z",
+      "name": "Chore(code) Mettre de l'ordre dans le code",
+      "description": "",
+      "duration": 20,
+      "status": "Done"
+    },
+    {
+      "id": "d8568c3a-5136-4bc0-9e3c-07919037aded",
+      "type": "commitpatch",
+      "sha": "9ebd1a7d7efdfe1f5d7afa727dbc21e1f79e54e3",
+      "url": "https://github.com/EsteEscher/Shoot_me_up/commit/9ebd1a7d7efdfe1f5d7afa727dbc21e1f79e54e3",
+      "author": "EsteEscher",
+      "patch": true,
+      "date": "2026-10-30T10:31:00.000Z",
+      "name": "feat(code) ajout d'un background",
+      "description": "",
+      "duration": 5,
+      "status": "Done"
     }
   ]
 }

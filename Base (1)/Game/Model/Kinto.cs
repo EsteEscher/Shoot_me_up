@@ -1,6 +1,6 @@
 ﻿using Game.Properties;
 
-namespace Player
+namespace Shoot_me_up
 {
     public class Kinto
     {

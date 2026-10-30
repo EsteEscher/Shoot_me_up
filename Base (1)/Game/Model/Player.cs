@@ -1,7 +1,7 @@
-﻿using Player.Helpers;
+﻿using Shoot_me_up.Helpers;
 using Game.Properties;
 
-namespace Player
+namespace Shoot_me_up
 {
     public class Player
     {
@@ -70,12 +70,6 @@ namespace Player
         public void Render(BufferedGraphics drawingSpace)
         {
             drawingSpace.Graphics.DrawImage(Resources.Goku, x - 30, y - 10, 125, 100);
-            drawingSpace.Graphics.DrawString($"{this}", TextHelpers.drawFont, TextHelpers.writingBrush, x + 5, y - 25);
-        }
-
-        public override string ToString()
-        {
-            return $"Goku (PV: {hp})";
         }
     }
 }

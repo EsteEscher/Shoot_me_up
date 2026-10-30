@@ -1,7 +1,7 @@
 ﻿using Game.Properties;
 using System.Drawing.Drawing2D;
 
-namespace Player
+namespace Shoot_me_up
 {
     public class TirEnnemi
     {
@@ -42,8 +42,8 @@ namespace Player
                 _diry = SPEED; // Vers le bas par défaut
             }
 
-            // Orientation du tir vers sa cible (ajuste +90f selon ton sprite)
-            _angle = (float)(Math.Atan2(deltaY, deltaX) * 180.0 / Math.PI) + 90f;
+            // Orientation du tir vers sa cible
+            _angle = (float)(Math.Atan2(deltaY, deltaX) * 180.0 / Math.PI) - 90f;
         }
 
         public void Update(int interval)

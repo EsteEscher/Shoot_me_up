@@ -1,7 +1,7 @@
 ﻿using Game.Properties;
-using Player.Helpers;
+using Shoot_me_up.Helpers;
 
-namespace Player
+namespace Shoot_me_up
 {
     public class Ennemis
     {

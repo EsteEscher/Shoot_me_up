@@ -1,7 +1,7 @@
 using Game.Properties;
-using Player.Helpers;
+using Shoot_me_up.Helpers;
 
-namespace Player
+namespace Shoot_me_up
 {
     public partial class GameSpace : Form
     {
@@ -138,7 +138,6 @@ namespace Player
                 return;
             }
 
-            // Décompte du cooldown en millisecondes réelles
             if (_playerShootCooldown > 0)
             {
                 _playerShootCooldown -= interval;
@@ -148,7 +147,6 @@ namespace Player
 
             _player.Update(interval);
 
-            // 1. Tirs alliés
             for (int i = _bullets.Count - 1; i >= 0; i--)
             {
                 Tirs tir = _bullets[i];
@@ -205,7 +203,6 @@ namespace Player
                 }
             }
 
-            // 2. Ennemis
             for (int i = _ennemis.Count - 1; i >= 0; i--)
             {
                 _ennemis[i].Update(interval, _kintos);
@@ -216,7 +213,6 @@ namespace Player
                 }
             }
 
-            // 3. Tirs ennemis
             foreach (Ennemis ennemi in _ennemis)
             {
                 TirEnnemi? nouveauTir = ennemi.TryShoot();
@@ -226,7 +222,6 @@ namespace Player
                 }
             }
 
-            // 4. Déplacement et collisions tirs ennemis
             for (int i = _enemyBullets.Count - 1; i >= 0; i--)
             {
                 TirEnnemi tir = _enemyBullets[i];
@@ -271,7 +266,6 @@ namespace Player
                 }
             }
 
-            // 5. Vagues d'ennemis
             if (_ennemis.Count == 0)
             {
                 _waveCooldown++;
@@ -284,7 +278,6 @@ namespace Player
                 }
             }
 
-            // 6. Régénération des Kintos
             foreach (Kinto kinto in _kintos)
             {
                 kinto.Update(interval);
@@ -352,7 +345,7 @@ namespace Player
                         int starty = _player.y;
 
                         _bullets.Add(new Tirs(startx, starty, mousePos.X, mousePos.Y, 40, 40));
-                        _playerShootCooldown = PLAYER_SHOOT_DELAY; // 200 ms avant le tir suivant
+                        _playerShootCooldown = PLAYER_SHOOT_DELAY;
                     }
                     break;
             }

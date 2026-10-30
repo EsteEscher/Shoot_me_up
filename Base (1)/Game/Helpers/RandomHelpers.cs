@@ -1,4 +1,4 @@
-﻿namespace Player.Helpers
+﻿namespace Shoot_me_up.Helpers
 {
     // Outils pour la génération de valeurs aléatoires
     internal static class RandomHelpers

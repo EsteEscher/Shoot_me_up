@@ -1,4 +1,4 @@
-﻿namespace Player
+﻿namespace Shoot_me_up
 {
     partial class GameSpace
     {

@@ -1,7 +1,7 @@
 ﻿using Game.Properties;
 using System.Drawing.Drawing2D;
 
-namespace Player
+namespace Shoot_me_up
 {
     public class Tirs
     {

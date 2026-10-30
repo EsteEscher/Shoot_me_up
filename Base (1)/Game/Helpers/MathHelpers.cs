@@ -1,4 +1,4 @@
-namespace Player
+namespace Shoot_me_up
 {
     // Outils pour des calculs mathématiques
     public static class MathHelpers

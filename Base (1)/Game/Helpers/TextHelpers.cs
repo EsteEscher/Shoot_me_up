@@ -1,6 +1,6 @@
 ﻿using System.Drawing;
 
-namespace Player.Helpers
+namespace Shoot_me_up.Helpers
 {
     internal static class TextHelpers
     {

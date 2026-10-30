@@ -1,6 +1,6 @@
-using Player.Helpers;
+using Shoot_me_up.Helpers;
 
-namespace Player
+namespace Shoot_me_up
 {
     internal static class Program
     {
