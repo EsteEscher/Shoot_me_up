@@ -386,6 +386,19 @@
       "description": "",
       "duration": 5,
       "status": "Done"
+    },
+    {
+      "id": "db67926f-9f5e-4063-bd8f-8d0a96e67b55",
+      "type": "commitless",
+      "author": [
+        "esteban-escher",
+        "EsteEscher"
+      ],
+      "date": "2026-10-30T14:17:00.000Z",
+      "name": "Chore(Rapport) Travail dans le rapport point 2 à 5",
+      "description": "",
+      "duration": 60,
+      "status": "DONE"
     }
   ]
 }

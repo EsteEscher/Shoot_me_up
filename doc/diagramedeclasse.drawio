@@ -1,6 +1,6 @@
 <mxfile host="Electron">
   <diagram name="Diagramme de Classes" id="aUAiNj9FaUXCVeCUT0_e">
-    <mxGraphModel dx="1356" dy="1186" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="827" pageHeight="1169" math="0" shadow="0">
+    <mxGraphModel dx="1414" dy="841" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="827" pageHeight="1169" math="0" shadow="0">
       <root>
         <mxCell id="0" />
         <mxCell id="1" parent="0" />
@@ -8,7 +8,7 @@
           <mxGeometry height="60" width="160" x="660" y="40" as="geometry" />
         </mxCell>
         <mxCell id="KKKdB0MusXaj-ZVTsfPB-109" parent="1" style="swimlane;fontStyle=1;align=center;verticalAlign=top;childLayout=stackLayout;horizontal=1;startSize=26;horizontalStack=0;resizeParent=1;resizeParentMax=0;resizeLast=0;collapsible=1;marginBottom=0;fillColor=#dae8fc;strokeColor=#6c8ebf;" value="&lt;b&gt;GameSpace&lt;/b&gt;" vertex="1">
-          <mxGeometry height="340" width="280" x="600" y="180" as="geometry" />
+          <mxGeometry height="370" width="280" x="600" y="180" as="geometry" />
         </mxCell>
         <mxCell id="KKKdB0MusXaj-ZVTsfPB-110" parent="KKKdB0MusXaj-ZVTsfPB-109" style="text;strokeColor=none;fillColor=none;align=left;verticalAlign=top;spacingLeft=4;spacingRight=4;overflow=hidden;rotatable=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;" value="+ WIDTH : int = 1200&#xa;+ HEIGHT : int = 600&#xa;- _waveNumber : int = 1&#xa;- _waveCooldown : int = 0&#xa;- _score : int = 0&#xa;- _isGameOver : bool = false&#xa;- PLAYER_SHOOT_DELAY : int = 200&#xa;- _playerShootCooldown : int = 0&#xa;- _player : Player&#xa;- _ennemis : List&lt;Ennemis&gt;&#xa;- _bullets : List&lt;Tirs&gt;&#xa;- _kintos : List&lt;Kinto&gt;&#xa;- _enemyBullets : List&lt;TirEnnemi&gt;&#xa;- currentContext : BufferedGraphicsContext&#xa;- gamespace : BufferedGraphics" vertex="1">
           <mxGeometry height="214" width="280" y="26" as="geometry" />
@@ -17,7 +17,7 @@
           <mxGeometry height="8" width="280" y="240" as="geometry" />
         </mxCell>
         <mxCell id="KKKdB0MusXaj-ZVTsfPB-112" parent="KKKdB0MusXaj-ZVTsfPB-109" style="text;strokeColor=none;fillColor=none;align=left;verticalAlign=top;spacingLeft=4;spacingRight=4;overflow=hidden;rotatable=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;" value="+ GameSpace(player, ennemis, bullets)&#xa;- InitializeKintos() : void&#xa;- RestartGame() : void&#xa;- Render() : void&#xa;- Update(interval : int) : void&#xa;- SpawnWave() : void&#xa;- NewFrame(sender, e) : void&#xa;- GameSpace_KeyDown(sender, e) : void" vertex="1">
-          <mxGeometry height="92" width="280" y="248" as="geometry" />
+          <mxGeometry height="122" width="280" y="248" as="geometry" />
         </mxCell>
         <mxCell id="KKKdB0MusXaj-ZVTsfPB-113" parent="1" style="swimlane;fontStyle=1;align=center;verticalAlign=top;childLayout=stackLayout;horizontal=1;startSize=26;horizontalStack=0;resizeParent=1;resizeParentMax=0;resizeLast=0;collapsible=1;marginBottom=0;fillColor=#dae8fc;strokeColor=#6c8ebf;" value="&lt;b&gt;Player&lt;/b&gt;" vertex="1">
           <mxGeometry height="200" width="280" x="120" y="240" as="geometry" />
@@ -91,7 +91,7 @@
         <mxCell id="KKKdB0MusXaj-ZVTsfPB-136" edge="1" parent="1" source="KKKdB0MusXaj-ZVTsfPB-109" style="endArrow=block;endSize=16;endFill=0;html=1;rounded=0;entryX=0.5;entryY=1;entryDx=0;entryDy=0;exitX=0.5;exitY=0;exitDx=0;exitDy=0;" target="KKKdB0MusXaj-ZVTsfPB-108" value="">
           <mxGeometry relative="1" width="160" as="geometry" />
         </mxCell>
-        <mxCell id="KKKdB0MusXaj-ZVTsfPB-137" edge="1" parent="1" source="KKKdB0MusXaj-ZVTsfPB-109" style="endArrow=diamondThin;endFill=1;endSize=14;html=1;rounded=0;exitX=0;exitY=0.4;exitDx=0;exitDy=0;entryX=1;entryY=0.4;entryDx=0;entryDy=0;" target="KKKdB0MusXaj-ZVTsfPB-113" value="1">
+        <mxCell id="KKKdB0MusXaj-ZVTsfPB-137" edge="1" parent="1" source="KKKdB0MusXaj-ZVTsfPB-109" style="endArrow=diamondThin;endFill=1;endSize=14;html=1;rounded=0;exitX=0;exitY=0.4;exitDx=0;exitDy=0;entryX=1;entryY=0.4;entryDx=0;entryDy=0;" target="KKKdB0MusXaj-ZVTsfPB-113" value="1,1">
           <mxGeometry relative="1" width="160" as="geometry">
             <mxPoint as="offset" />
           </mxGeometry>
@@ -101,17 +101,22 @@
             <mxPoint as="offset" />
           </mxGeometry>
         </mxCell>
-        <mxCell id="KKKdB0MusXaj-ZVTsfPB-139" edge="1" parent="1" source="KKKdB0MusXaj-ZVTsfPB-109" style="endArrow=diamondThin;endFill=1;endSize=14;html=1;rounded=0;exitX=0.5;exitY=1;exitDx=0;exitDy=0;entryX=0.5;entryY=0;entryDx=0;entryDy=0;" target="KKKdB0MusXaj-ZVTsfPB-121" value="5">
+        <mxCell id="vwb8HNsyXjyt8iTqneSj-1" connectable="0" parent="KKKdB0MusXaj-ZVTsfPB-138" style="edgeLabel;html=1;align=center;verticalAlign=middle;resizable=0;points=[];" value="1,n" vertex="1">
+          <mxGeometry relative="1" x="0.0284" y="-1" as="geometry">
+            <mxPoint as="offset" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="KKKdB0MusXaj-ZVTsfPB-139" edge="1" parent="1" source="KKKdB0MusXaj-ZVTsfPB-109" style="endArrow=diamondThin;endFill=1;endSize=14;html=1;rounded=0;exitX=0.5;exitY=1;exitDx=0;exitDy=0;entryX=0.5;entryY=0;entryDx=0;entryDy=0;" target="KKKdB0MusXaj-ZVTsfPB-121" value="1,5">
           <mxGeometry relative="1" width="160" as="geometry">
             <mxPoint as="offset" />
           </mxGeometry>
         </mxCell>
-        <mxCell id="KKKdB0MusXaj-ZVTsfPB-140" edge="1" parent="1" source="KKKdB0MusXaj-ZVTsfPB-109" style="endArrow=diamondThin;endFill=1;endSize=14;html=1;rounded=0;exitX=0.25;exitY=1;exitDx=0;exitDy=0;entryX=0.5;entryY=0;entryDx=0;entryDy=0;" target="KKKdB0MusXaj-ZVTsfPB-125" value="*">
+        <mxCell id="KKKdB0MusXaj-ZVTsfPB-140" edge="1" parent="1" source="KKKdB0MusXaj-ZVTsfPB-109" style="endArrow=diamondThin;endFill=1;endSize=14;html=1;rounded=0;exitX=0.25;exitY=1;exitDx=0;exitDy=0;entryX=0.5;entryY=0;entryDx=0;entryDy=0;" target="KKKdB0MusXaj-ZVTsfPB-125" value="1,n">
           <mxGeometry relative="1" width="160" as="geometry">
             <mxPoint as="offset" />
           </mxGeometry>
         </mxCell>
-        <mxCell id="KKKdB0MusXaj-ZVTsfPB-141" edge="1" parent="1" source="KKKdB0MusXaj-ZVTsfPB-109" style="endArrow=diamondThin;endFill=1;endSize=14;html=1;rounded=0;exitX=0.75;exitY=1;exitDx=0;exitDy=0;entryX=0.5;entryY=0;entryDx=0;entryDy=0;" target="KKKdB0MusXaj-ZVTsfPB-129" value="*">
+        <mxCell id="KKKdB0MusXaj-ZVTsfPB-141" edge="1" parent="1" source="KKKdB0MusXaj-ZVTsfPB-109" style="endArrow=diamondThin;endFill=1;endSize=14;html=1;rounded=0;exitX=0.75;exitY=1;exitDx=0;exitDy=0;entryX=0.5;entryY=0;entryDx=0;entryDy=0;" target="KKKdB0MusXaj-ZVTsfPB-129" value="1,n">
           <mxGeometry relative="1" width="160" as="geometry">
             <mxPoint as="offset" />
           </mxGeometry>
@@ -129,6 +134,12 @@
         </mxCell>
         <mxCell id="KKKdB0MusXaj-ZVTsfPB-144" edge="1" parent="1" source="KKKdB0MusXaj-ZVTsfPB-129" style="endArrow=open;endSize=12;dashed=1;html=1;rounded=0;exitX=0.25;exitY=1;exitDx=0;exitDy=0;entryX=1;entryY=0.5;entryDx=0;entryDy=0;" target="KKKdB0MusXaj-ZVTsfPB-133" value="&amp;laquo;uses&amp;raquo;">
           <mxGeometry relative="1" width="160" as="geometry" />
+        </mxCell>
+        <mxCell id="vwb8HNsyXjyt8iTqneSj-2" parent="1" style="text;html=1;whiteSpace=wrap;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;rounded=0;" value="Shoot" vertex="1">
+          <mxGeometry height="30" width="60" x="430" y="530" as="geometry" />
+        </mxCell>
+        <mxCell id="vwb8HNsyXjyt8iTqneSj-3" parent="1" style="text;html=1;whiteSpace=wrap;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;rounded=0;" value="Shoot" vertex="1">
+          <mxGeometry height="30" width="60" x="1000" y="530" as="geometry" />
         </mxCell>
       </root>
     </mxGraphModel>
