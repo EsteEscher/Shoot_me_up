@@ -1,4 +1,4 @@
-using Shoot_me_up.Helpers;
+﻿using Shoot_me_up.Helpers;
 
 namespace Shoot_me_up
 {
@@ -22,7 +22,7 @@ namespace Shoot_me_up
             List<Tirs> bullets = new List<Tirs>();
 
 
-            // D�marrage
+            // Démarrage
             Application.Run(new GameSpace(p1, army, bullets));
 
 

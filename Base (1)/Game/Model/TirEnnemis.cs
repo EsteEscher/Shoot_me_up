@@ -1,4 +1,4 @@
-﻿using Game.Properties;
+using Game.Properties;
 using System.Drawing.Drawing2D;
 
 namespace Shoot_me_up
@@ -31,6 +31,7 @@ namespace Shoot_me_up
 
             double distance = MathHelpers.Distance(startX, startY, targetX, targetY);
 
+            // Normalisation du vecteur pour maintenir une vitesse constante vers la cible
             if (distance > 0)
             {
                 _dirx = (deltaX / distance) * SPEED;
@@ -57,6 +58,7 @@ namespace Shoot_me_up
             Graphics g = drawingSpace.Graphics;
             GraphicsState state = g.Save();
 
+            // Translation au centre et rotation pour orienter le sprite vers sa direction
             g.TranslateTransform((float)_x + SizeX / 2f, (float)_y + SizeY / 2f);
             g.RotateTransform(_angle);
             g.DrawImage(Resources.enemyshot, -SizeX / 2f, -SizeY / 2f, SizeX, SizeY);

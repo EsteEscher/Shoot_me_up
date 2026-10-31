@@ -30,6 +30,7 @@ namespace Shoot_me_up
             InitializeComponent();
             ClientSize = new Size(WIDTH, HEIGHT);
 
+            // Double buffering pour éviter les scintillements à l'affichage
             currentContext = BufferedGraphicsManager.Current;
             gamespace = currentContext.Allocate(this.CreateGraphics(), this.DisplayRectangle);
             this._player = player;
@@ -45,6 +46,7 @@ namespace Shoot_me_up
             int kintoY = HEIGHT - 200;
             int spacing = WIDTH / 6;
 
+            // Répartition régulière des nuages protecteurs Kinto sur la largeur
             for (int i = 1; i <= 5; i++)
             {
                 _kintos.Add(new Kinto((i * spacing) - 45, kintoY));
@@ -102,11 +104,11 @@ namespace Shoot_me_up
             gamespace.Graphics.DrawString($"Score : {_score} pts", TextHelpers.drawFont, TextHelpers.writingBrush, 20, 40);
             gamespace.Graphics.DrawString($"PV Goku : {_player.hp}", TextHelpers.drawFont, TextHelpers.writingBrush, 20, 60);
 
-            string reloadStatus = _playerShootCooldown <= 0 ? "Tir : PR�T" : "Tir : RECHARGE...";
+            string reloadStatus = _playerShootCooldown <= 0 ? "Tir : PRÊT" : "Tir : RECHARGE...";
             Brush statusBrush = _playerShootCooldown <= 0 ? Brushes.Green : Brushes.OrangeRed;
             gamespace.Graphics.DrawString(reloadStatus, TextHelpers.drawFont, statusBrush, 20, 80);
 
-            // �cran de Game Over
+            // Écran de Game Over
             if (_isGameOver)
             {
                 gamespace.Graphics.FillRectangle(TextHelpers.darkOverlayBrush, 0, 0, WIDTH, HEIGHT);
@@ -147,6 +149,7 @@ namespace Shoot_me_up
 
             _player.Update(interval);
 
+            // Parcours inversé pour supprimer sans risque les projectiles hors écran ou ayant touché une cible
             for (int i = _bullets.Count - 1; i >= 0; i--)
             {
                 Tirs tir = _bullets[i];
@@ -161,6 +164,7 @@ namespace Shoot_me_up
                 bool hit = false;
                 Rectangle bulletRect = new Rectangle((int)tir.X, (int)tir.Y, tir.SizeX, tir.SizeY);
 
+                // Les nuages absorbent les tirs et subissent des dégâts
                 for (int k = _kintos.Count - 1; k >= 0; k--)
                 {
                     Kinto kinto = _kintos[k];
@@ -177,6 +181,7 @@ namespace Shoot_me_up
 
                 if (!hit)
                 {
+                    // Test d'impact sur les ennemis vivants et mise à jour du score si détruit
                     for (int j = _ennemis.Count - 1; j >= 0; j--)
                     {
                         Ennemis ennemi = _ennemis[j];
@@ -236,6 +241,7 @@ namespace Shoot_me_up
                 bool hit = false;
                 Rectangle bulletRect = new Rectangle((int)tir.X, (int)tir.Y, tir.SizeX, tir.SizeY);
 
+                // Les nuages absorbent les tirs et subissent des dégâts
                 for (int k = _kintos.Count - 1; k >= 0; k--)
                 {
                     Kinto kinto = _kintos[k];
@@ -266,6 +272,7 @@ namespace Shoot_me_up
                 }
             }
 
+            // Transition de vague : délai d'attente avant de lancer la vague suivante
             if (_ennemis.Count == 0)
             {
                 _waveCooldown++;
@@ -286,6 +293,7 @@ namespace Shoot_me_up
 
         private void SpawnWave()
         {
+            // Progression de la difficulté et positionnement aléatoire au-dessus de l'écran
             int enemiesCount = 10 + (_waveNumber * 2);
 
             for (int i = 0; i < enemiesCount; i++)
@@ -340,6 +348,7 @@ namespace Shoot_me_up
                 case Keys.Space:
                     if (_playerShootCooldown <= 0)
                     {
+                        // Tir orienté vers le curseur de la souris (converti en coordonnées locales)
                         Point mousePos = this.PointToClient(Cursor.Position);
                         int startx = _player.x + 15;
                         int starty = _player.y;

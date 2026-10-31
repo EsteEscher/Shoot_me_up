@@ -1,4 +1,4 @@
-﻿using Shoot_me_up.Helpers;
+using Shoot_me_up.Helpers;
 using Game.Properties;
 
 namespace Shoot_me_up
@@ -20,6 +20,7 @@ namespace Shoot_me_up
         {
         }
 
+        // Déplacement du joueur selon la direction (1: droite, 2: haut, 3: gauche, 4: bas)
         public void ChangeDirection(int side, List<Kinto> kintos)
         {
             int nextX = x;
@@ -45,6 +46,7 @@ namespace Shoot_me_up
             if (nextY >= GameSpace.HEIGHT - 100)
                 nextY = GameSpace.HEIGHT - 100;
 
+            // Prédiction de collision : bloque le déplacement si la future position touche un nuage
             Rectangle nextPlayerRect = new Rectangle(nextX + 10, nextY + 10, 60, 70);
 
             bool blocked = false;

@@ -1,4 +1,4 @@
-﻿using Game.Properties;
+using Game.Properties;
 using Shoot_me_up.Helpers;
 
 namespace Shoot_me_up
@@ -46,6 +46,7 @@ namespace Shoot_me_up
             int nextX = _x;
             int nextY = _y;
 
+            // Descente verticale (TRAVELLING) puis traque ciblée du joueur en zone basse (SEEKING)
             if (_y <= GameSpace.HEIGHT - 200)
             {
                 state = State.TRAVELLING;
@@ -68,6 +69,7 @@ namespace Shoot_me_up
                 if (kinto.IsDestroyed) continue;
 
                 Rectangle kintoRect = new Rectangle(kinto.X, kinto.Y, kinto.Width, kinto.Height);
+                // Collision avec un nuage Kinto : bloque l'ennemi et endommage l'obstacle
                 if (nextEnnemiRect.IntersectsWith(kintoRect))
                 {
                     blocked = true;
@@ -82,6 +84,7 @@ namespace Shoot_me_up
                 _y = nextY;
             }
 
+            // Attaque suicide si l'ennemi atteint le joueur au corps-à-corps
             if (Math.Abs(_x - _player.x) < 20 && Math.Abs(_y - _player.y) < 20)
             {
                 state = State.EXPLOSING;
@@ -103,6 +106,7 @@ namespace Shoot_me_up
                 double spawnX = _x + WIDTHSIZE / 2.0;
                 double spawnY = _y + HEIGHTSIZE;
 
+                // Vise la position actuelle du joueur
                 double targetX = _player.x + 30;
                 double targetY = _player.y + 20;
 

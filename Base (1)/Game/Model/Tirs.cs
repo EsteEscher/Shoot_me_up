@@ -1,4 +1,4 @@
-﻿using Game.Properties;
+using Game.Properties;
 using System.Drawing.Drawing2D;
 
 namespace Shoot_me_up
@@ -33,6 +33,7 @@ namespace Shoot_me_up
 
             double distance = MathHelpers.Distance(startx, starty, targetx, targety);
 
+            // Normalisation du vecteur pour maintenir une vitesse constante vers la cible
             if (distance > 0)
             {
                 _dirx = (deltax / distance) * _SPEED;
@@ -44,7 +45,7 @@ namespace Shoot_me_up
                 _diry = -_SPEED;
             }
 
-            // Calcul de l'angle en degrés
+            // Calcul de l'angle en degrés (+90° pour aligner l'orientation du sprite)
             _angle = (float)(Math.Atan2(deltay, deltax) * 180.0 / Math.PI) + 90f;
         }
 
@@ -58,6 +59,7 @@ namespace Shoot_me_up
         {
             Graphics g = drawingSpace.Graphics;
             GraphicsState state = g.Save();
+            // Translation au centre et rotation pour orienter le projectile selon son angle
             g.TranslateTransform((float)_x + _bulletsizex / 2f, (float)_y + _bulletsizey / 2f);
             g.RotateTransform(_angle);
 
